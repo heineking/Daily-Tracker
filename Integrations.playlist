@@ -1,1 +1,1 @@
-<Playlist Version="1.0"><Add Test="Tests.Integrations.QuestionnaireRepositoryTests.Questionnaire_Repo_Integration_Tests" /></Playlist>
+<Playlist Version="1.0"><Add Test="Tests.Integrations.QuestionnaireRepositoryTests.Questionnaire_Repo_Integration_Tests" /><Add Test="Tests.Integrations.QuestionnaireRepositoryTests.Should_Be_Able_To_Update_Untracked_Entities" /></Playlist>

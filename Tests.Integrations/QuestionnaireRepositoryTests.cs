@@ -45,6 +45,34 @@ namespace Tests.Integrations {
     }
 
     [TestMethod]
+    public void Should_Be_Able_To_Update_Untracked_Entities() {
+      var builder = new DbContextOptionsBuilder<DailyTrackerContext>()
+        .UseSqlite("Data Source=test.db");
+
+      // arrange
+      var q = questionnaire(default(int));
+      var context = new DailyTrackerContext(builder.Options);
+      var repo = new QuestionnaireRepository(_context, new EntityPredicate());
+      repo.Save(q);
+      context.SaveChanges();
+
+      // act
+      var questionnaireId = q.QuestionnaireId;
+
+      var nextContext = new DailyTrackerContext(builder.Options);
+      var nextRepo = new QuestionnaireRepository(nextContext, new EntityPredicate());
+
+      var updatedQ = new Questionnaire { Name = "Updated", QuestionnaireId = questionnaireId };
+      nextRepo.Save(updatedQ);
+
+      // assert
+      var updatedFromDb = nextRepo.GetById(questionnaireId);
+
+      Assert.AreEqual(updatedFromDb.Name, "Updated");
+    }
+
+
+    [TestMethod]
     public void Questionnaire_Repo_Integration_Tests() {
       // arrange
       var q1 = questionnaire(default(int));
