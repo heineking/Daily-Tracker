@@ -1,19 +1,12 @@
-﻿using DataAccessLayer.Contracts.Entities;
+﻿using DataAccess.Contracts.Strategies;
+using DataAccessLayer.Contracts.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer.EntityFramework.Repositories
 {
   public class QuestionnaireRepository : Repository<Questionnaire> {
 
-    public QuestionnaireRepository(DbContext context) : base(context) {
-    }
-
-    public override void Save(Questionnaire entity) {
-      if (entity.QuestionnaireId == default(int)) {
-        EntityDbSet.Add(entity);
-      } else {
-        EntityDbSet.Update(entity);
-      }
+    public QuestionnaireRepository(DbContext context, IEntityPredicate entityPredicate) : base(context, entityPredicate) {
     }
   }
 }

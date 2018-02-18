@@ -9,6 +9,5 @@ namespace DataAccessLayer.Contracts.Entities {
     public string Description { get; set; }
     public DateTime CreatedDate { get; set; }
     public ICollection<Question> Questions { get; set; }
-    public ICollection<Result> Results { get; set; }
   }
 }

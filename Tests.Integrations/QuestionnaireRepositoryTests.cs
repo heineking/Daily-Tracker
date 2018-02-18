@@ -1,3 +1,4 @@
+using DataAccess.Contracts.Strategies;
 using DataAccessLayer.Contracts.Entities;
 using DataAccessLayer.EntityFramework.Context;
 using DataAccessLayer.EntityFramework.Repositories;
@@ -27,7 +28,7 @@ namespace Tests.Integrations {
 
       _context = new DailyTrackerContext(builder.Options);
       _context.Database.Migrate();
-      _repo = new QuestionnaireRepository(_context);
+      _repo = new QuestionnaireRepository(_context, new EntityPredicate());
     }
 
     [TestMethod]

@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Repositories\IReader.cs" />
     <Compile Remove="Repositories\IWriter.cs" />
+    <Compile Remove="Strategies\IKeySelector.cs" />
+    <Compile Remove="Strategies\SelectEntityId.cs" />
   </ItemGroup>
 
   <ItemGroup>

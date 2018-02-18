@@ -43,8 +43,10 @@ namespace DataAccessLayer.EntityFramework.Migrations
                     UserId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     BirthDate = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true)
+                    LastName = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -103,13 +105,13 @@ namespace DataAccessLayer.EntityFramework.Migrations
                 name: "UserDirectory",
                 columns: table => new
                 {
-                    Username = table.Column<string>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
                     Password = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    Username = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserDirectory", x => x.Username);
+                    table.PrimaryKey("PK_UserDirectory", x => x.UserId);
                     table.ForeignKey(
                         name: "FK_UserDirectory_Users_UserId",
                         column: x => x.UserId,
@@ -152,7 +154,7 @@ namespace DataAccessLayer.EntityFramework.Migrations
                     AnswerId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     AdditionalNotes = table.Column<string>(nullable: true),
-                    OptionId = table.Column<int>(nullable: true),
+                    OptionId = table.Column<int>(nullable: false),
                     ResultId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -163,7 +165,7 @@ namespace DataAccessLayer.EntityFramework.Migrations
                         column: x => x.OptionId,
                         principalTable: "Options",
                         principalColumn: "OptionId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Answers_Results_ResultId",
                         column: x => x.ResultId,
@@ -206,12 +208,6 @@ namespace DataAccessLayer.EntityFramework.Migrations
                 name: "IX_Results_UserId",
                 table: "Results",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserDirectory_UserId",
-                table: "UserDirectory",
-                column: "UserId",
-                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
