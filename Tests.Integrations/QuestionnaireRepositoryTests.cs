@@ -70,6 +70,11 @@ namespace Tests.Integrations {
       fromDb.Name = "foo bar";
       fromDb.CreatedDate = DateTime.Parse("2018-02-11");
       fromDb.Description = "foo bar";
+      var question = fromDb.Questions.First();
+      fromDb.Questions.Remove(question);
+      fromDb.Questions.Add(new Question {
+        QuestionText = "New Question"
+      });
 
       _repo.Save(fromDb);
       _context.SaveChanges();
@@ -81,6 +86,7 @@ namespace Tests.Integrations {
       Assert.AreEqual(updatedFromDb.Name, "foo bar");
       Assert.AreEqual(updatedFromDb.Description, "foo bar");
       Assert.AreEqual(updatedFromDb.CreatedDate, DateTime.Parse("2018-02-11"));
+      Assert.AreEqual(updatedFromDb.Questions.ElementAtOrDefault(0).QuestionText, "New Question");
 
       // arrange
       var entities = _repo
