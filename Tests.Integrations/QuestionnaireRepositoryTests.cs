@@ -19,7 +19,20 @@ namespace Tests.Integrations {
       QuestionnaireId = id,
       CreatedDate = DateTime.Parse("2018-02-17"),
       Description = $"Test Questionnaire {id}",
-      Name = $"Test {id}"
+      Name = $"Test {id}",
+      Questions = new List<Question> {
+        new Question {
+          QuestionText = $"Test Question {id}",
+          QuestionOptions = new List<QuestionOption> {
+            new QuestionOption {
+              OptionValue = 1,
+              Option = new Option {
+                OptionText = $"Option {id}"
+              }
+            }
+          }
+        }
+      }
     };
 
     public QuestionnaireRepositoryTests() {

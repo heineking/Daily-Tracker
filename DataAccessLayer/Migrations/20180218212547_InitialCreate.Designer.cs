@@ -11,7 +11,7 @@ using System;
 namespace DataAccessLayer.EntityFramework.Migrations
 {
     [DbContext(typeof(DailyTrackerContext))]
-    [Migration("20180218113114_InitialCreate")]
+    [Migration("20180218212547_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,7 @@ namespace DataAccessLayer.EntityFramework.Migrations
 
                     b.Property<string>("QuestionText");
 
-                    b.Property<int?>("QuestionnaireId");
+                    b.Property<int>("QuestionnaireId");
 
                     b.HasKey("QuestionId");
 
@@ -174,9 +174,10 @@ namespace DataAccessLayer.EntityFramework.Migrations
 
             modelBuilder.Entity("DataAccessLayer.Contracts.Entities.Question", b =>
                 {
-                    b.HasOne("DataAccessLayer.Contracts.Entities.Questionnaire")
+                    b.HasOne("DataAccessLayer.Contracts.Entities.Questionnaire", "Questionnaire")
                         .WithMany("Questions")
-                        .HasForeignKey("QuestionnaireId");
+                        .HasForeignKey("QuestionnaireId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DataAccessLayer.Contracts.Entities.QuestionOption", b =>

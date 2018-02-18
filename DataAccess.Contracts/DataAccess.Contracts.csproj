@@ -5,14 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Persistance\IQuestionnaireRepository.cs" />
     <Compile Remove="Repositories\IReader.cs" />
     <Compile Remove="Repositories\IWriter.cs" />
     <Compile Remove="Strategies\IKeySelector.cs" />
     <Compile Remove="Strategies\SelectEntityId.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

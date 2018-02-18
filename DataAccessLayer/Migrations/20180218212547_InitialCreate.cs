@@ -60,7 +60,7 @@ namespace DataAccessLayer.EntityFramework.Migrations
                     QuestionId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     QuestionText = table.Column<string>(nullable: true),
-                    QuestionnaireId = table.Column<int>(nullable: true)
+                    QuestionnaireId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,7 +70,7 @@ namespace DataAccessLayer.EntityFramework.Migrations
                         column: x => x.QuestionnaireId,
                         principalTable: "Questionnaires",
                         principalColumn: "QuestionnaireId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
