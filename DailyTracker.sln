@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mediator", "Mediator\Mediat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.EntityFramework", "DataAccess.EntityFramework\DataAccess.EntityFramework.csproj", "{3D3FCE2D-5191-4EF5-8ABB-C04F814AC983}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{BDFE487B-68E4-4190-ABB8-7BD97A2C3ACA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{3D3FCE2D-5191-4EF5-8ABB-C04F814AC983}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D3FCE2D-5191-4EF5-8ABB-C04F814AC983}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D3FCE2D-5191-4EF5-8ABB-C04F814AC983}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDFE487B-68E4-4190-ABB8-7BD97A2C3ACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDFE487B-68E4-4190-ABB8-7BD97A2C3ACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDFE487B-68E4-4190-ABB8-7BD97A2C3ACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDFE487B-68E4-4190-ABB8-7BD97A2C3ACA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
