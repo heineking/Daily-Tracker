@@ -1,7 +1,7 @@
-﻿using Mediator.Contracts;
+﻿using Commands.Events;
+using Mediator.Contracts;
 using Nancy;
-using Services.Contracts.Events;
-using Services.Contracts.Requests;
+using Queries.Requests;
 
 namespace Api.Modules {
   public class QuestionnaireModule : NancyModule {

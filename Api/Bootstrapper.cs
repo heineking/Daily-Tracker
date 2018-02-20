@@ -44,14 +44,13 @@ namespace Api {
 
     protected override void ConfigureRequestContainer(IContainer container, NancyContext context) {
       base.ConfigureRequestContainer(container, context);
-
-      //var dbContextOptions = container.GetInstance(typeof(DbContextOptions<DailyTrackerContext>));
-
+      
       container.Configure(cfg => {
 
         // scan for the handlers
         cfg.Scan(scanner => {
-          scanner.Assembly("Services.Contracts");
+          scanner.Assembly("Commands");
+          scanner.Assembly("Queries");
           scanner.WithDefaultConventions();
           scanner.AddAllTypesOf(typeof(IRequestHandler<,>));
           scanner.AddAllTypesOf(typeof(IEventHandler<>));

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Services.Contracts.Requests {
+namespace Queries.Requests {
   public class GetAllQuestionnaires : IRequest<List<Questionnaire>> {
   }
 }

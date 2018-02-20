@@ -1,9 +1,9 @@
 ﻿using DataAccess.Contracts.Repositories;
 using DataAccessLayer.Contracts.Entities;
 using Mediator.Contracts;
-using Services.Contracts.Events;
+using Commands.Events;
 
-namespace Services.Contracts.EventHandlers {
+namespace Commands.EventHandlers {
   public class DeleteQuestionnaireHandler : IEventHandler<DeleteQuestionnaire> {
     private readonly IDelete<Questionnaire> _questionnaireDelete;
     

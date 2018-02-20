@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Services.Contracts.Events {
+namespace Commands.Events {
   public class SaveQuestionnaire : IEvent {
     public bool ShouldCreate => QuestionnaireId == default(int);
     public int QuestionnaireId { get; set; }

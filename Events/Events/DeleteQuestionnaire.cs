@@ -1,6 +1,6 @@
 ﻿using Mediator.Contracts;
 
-namespace Services.Contracts.Events {
+namespace Commands.Events {
   public class DeleteQuestionnaire : IEvent {
     public int QuestionnaireId { get; set; }
   }

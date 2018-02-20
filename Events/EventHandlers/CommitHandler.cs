@@ -1,11 +1,8 @@
 ﻿using DataAccess.Contracts.Persistance;
 using Mediator.Contracts;
-using Services.Contracts.Events;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Commands.Events;
 
-namespace Services.Contracts.EventHandlers
+namespace Commands.EventHandlers
 {
   public class CommitHandler : IEventHandler<Commit> {
     private readonly IUnitOfWork _uow;

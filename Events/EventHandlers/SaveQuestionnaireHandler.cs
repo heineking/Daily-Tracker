@@ -1,12 +1,10 @@
 ﻿using DataAccess.Contracts.Repositories;
 using DataAccessLayer.Contracts.Entities;
 using Mediator.Contracts;
-using Services.Contracts.Events;
+using Commands.Events;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Services.Contracts.EventHandlers {
+namespace Commands.EventHandlers {
   public class SaveQuestionnaireHandler : IEventHandler<SaveQuestionnaire> {
     private readonly ISave<Questionnaire> _questionnaireSaver;
     private readonly IRead<Questionnaire> _questionnaireReader;
