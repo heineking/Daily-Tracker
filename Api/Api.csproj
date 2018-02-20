@@ -18,8 +18,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataAccess.Contracts\DataAccess.Contracts.csproj" />
-    <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.EntityFramework.csproj" />
-    <ProjectReference Include="..\Hub\Mediator.csproj" />
+    <ProjectReference Include="..\DataAccess.EntityFramework\DataAccess.EntityFramework.csproj" />
+    <ProjectReference Include="..\Mediator\Mediator.csproj" />
     <ProjectReference Include="..\Services.Contracts\Services.Contracts.csproj" />
   </ItemGroup>
 

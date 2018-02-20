@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer.EntityFramework", "DataAccessLayer\DataAccessLayer.EntityFramework.csproj", "{D93C4F4B-9F8C-4AB4-9787-CEBA243D616A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F267BD6B-5828-4A72-98FA-43D49930BCEE}"
 	ProjectSection(SolutionItems) = preProject
 		dailytracker.db = dailytracker.db
@@ -16,13 +14,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Integrations", "Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Unit", "Tests.Unit\Tests.Unit.csproj", "{A0652340-4D5E-4E6B-A4BE-5358E8DB4DB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Contracts", "Services.Contracts\Services.Contracts.csproj", "{CCBAFABE-5E90-4E9E-84CA-454915280615}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Contracts", "Services.Contracts\Services.Contracts.csproj", "{CCBAFABE-5E90-4E9E-84CA-454915280615}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{E0F3E6C9-2D62-440F-B707-AE0E40FF5244}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{E0F3E6C9-2D62-440F-B707-AE0E40FF5244}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mediator", "Hub\Mediator.csproj", "{6684891C-5776-4C64-9E37-2C6B24108A27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Api\Api.csproj", "{225A8032-278B-4E1E-B91E-FEAE1B4FD1F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{225A8032-278B-4E1E-B91E-FEAE1B4FD1F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mediator", "Mediator\Mediator.csproj", "{21A773A2-6047-4DD1-BD72-80E3CC97E7EB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.EntityFramework", "DataAccess.EntityFramework\DataAccess.EntityFramework.csproj", "{3D3FCE2D-5191-4EF5-8ABB-C04F814AC983}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,10 +30,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D93C4F4B-9F8C-4AB4-9787-CEBA243D616A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D93C4F4B-9F8C-4AB4-9787-CEBA243D616A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D93C4F4B-9F8C-4AB4-9787-CEBA243D616A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D93C4F4B-9F8C-4AB4-9787-CEBA243D616A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2E2DEDCC-55A5-46B2-B4E6-7B681DF48580}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2E2DEDCC-55A5-46B2-B4E6-7B681DF48580}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E2DEDCC-55A5-46B2-B4E6-7B681DF48580}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -54,14 +50,18 @@ Global
 		{E0F3E6C9-2D62-440F-B707-AE0E40FF5244}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0F3E6C9-2D62-440F-B707-AE0E40FF5244}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0F3E6C9-2D62-440F-B707-AE0E40FF5244}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6684891C-5776-4C64-9E37-2C6B24108A27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6684891C-5776-4C64-9E37-2C6B24108A27}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6684891C-5776-4C64-9E37-2C6B24108A27}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6684891C-5776-4C64-9E37-2C6B24108A27}.Release|Any CPU.Build.0 = Release|Any CPU
 		{225A8032-278B-4E1E-B91E-FEAE1B4FD1F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{225A8032-278B-4E1E-B91E-FEAE1B4FD1F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{225A8032-278B-4E1E-B91E-FEAE1B4FD1F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{225A8032-278B-4E1E-B91E-FEAE1B4FD1F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21A773A2-6047-4DD1-BD72-80E3CC97E7EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21A773A2-6047-4DD1-BD72-80E3CC97E7EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21A773A2-6047-4DD1-BD72-80E3CC97E7EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21A773A2-6047-4DD1-BD72-80E3CC97E7EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D3FCE2D-5191-4EF5-8ABB-C04F814AC983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D3FCE2D-5191-4EF5-8ABB-C04F814AC983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D3FCE2D-5191-4EF5-8ABB-C04F814AC983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D3FCE2D-5191-4EF5-8ABB-C04F814AC983}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
