@@ -4,6 +4,5 @@ using System.Text;
 
 namespace Infrastructure.Mapper {
   public interface IModelMapper {
-    T ShallowClone<T>(T obj) where T : class;
   }
 }
