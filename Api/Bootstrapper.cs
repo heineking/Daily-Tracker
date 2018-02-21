@@ -8,6 +8,7 @@ using DataAccessLayer.EntityFramework.Persistence;
 using DataAccessLayer.EntityFramework.Repositories;
 using Mediator;
 using Mediator.Contracts;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Nancy;
@@ -18,6 +19,12 @@ using System.IO;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
+    private readonly IServiceCollection _services;
+
+    public Bootstrapper(IServiceCollection services) {
+      _services = services;
+    }
+
     protected override void ApplicationStartup(IContainer container, IPipelines pipelines) {
       base.ApplicationStartup(container, pipelines);
     }
@@ -25,18 +32,21 @@ namespace Api {
     protected override void ConfigureApplicationContainer(IContainer existingContainer) {
       base.ConfigureApplicationContainer(existingContainer);
 
+      // TODO: move this to start up?
       // create the db context options
       var configuration = new ConfigurationBuilder()
-      .SetBasePath(Directory.GetCurrentDirectory())
-      .AddJsonFile("appsettings.json")
-      .Build();
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json")
+        .Build();
 
       var builder = new DbContextOptionsBuilder<DailyTrackerContext>();
-
       var connectionString = configuration.GetConnectionString("dailytracker");
       builder.UseSqlite(connectionString);
 
       existingContainer.Configure(cfg => {
+        // transfer over the startup services
+        cfg.Populate(_services);
+
         cfg.For<DbContextOptions>().Use(builder.Options);
       });
 

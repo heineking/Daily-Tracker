@@ -1,10 +1,8 @@
-﻿using DataAccessLayer.Contracts.Entities;
-using Mediator.Contracts;
-using System;
+﻿using Mediator.Contracts;
+using Queries.Models;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Queries.Requests {
-  public class GetAllQuestionnaires : IRequest<List<Questionnaire>> {
+  public class GetAllQuestionnaires : IRequest<List<QuestionnaireModel>> {
   }
 }
