@@ -16,11 +16,13 @@ using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.StructureMap;
 using StructureMap;
 using System.IO;
+using FluentValidation;
+using Commands.Validators;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
     private readonly IServiceCollection _services;
-
+    
     public Bootstrapper(IServiceCollection services) {
       _services = services;
     }
@@ -47,7 +49,9 @@ namespace Api {
         // transfer over the startup services
         cfg.Populate(_services);
 
+        // register the db context options
         cfg.For<DbContextOptions>().Use(builder.Options);
+        
       });
 
     }

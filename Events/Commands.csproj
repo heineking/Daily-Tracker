@@ -9,4 +9,8 @@
     <ProjectReference Include="..\Mediator\Mediator.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="7.4.0" />
+  </ItemGroup>
+
 </Project>

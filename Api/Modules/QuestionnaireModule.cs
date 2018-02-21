@@ -1,6 +1,8 @@
 ﻿using Commands.Events;
 using Mediator.Contracts;
 using Nancy;
+using Nancy.ModelBinding;
+using Nancy.Validation;
 using Queries.Requests;
 
 namespace Api.Modules {
@@ -13,16 +15,12 @@ namespace Api.Modules {
       });
 
       Post("/", _ => {
+        var saveQuestionnaire = this.Bind<SaveQuestionnaire>();
 
-        hub.Publish(new SaveQuestionnaire {
-          Description = "New Questionnaire",
-          Name = "Questionnaire"
-        });
-
+        hub.Publish(saveQuestionnaire);
         hub.Publish(new Commit());
 
-        return Negotiate
-          .WithStatusCode(HttpStatusCode.Created);
+        return Negotiate.WithStatusCode(HttpStatusCode.Created);
       });
     }
   }
