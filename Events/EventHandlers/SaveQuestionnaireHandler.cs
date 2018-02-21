@@ -22,6 +22,8 @@ namespace Commands.EventHandlers {
       questionnaire.Name = @event.Name;
       questionnaire.Description = @event.Description;
       _questionnaireSaver.Save(questionnaire);
+
+      @event.QuestionnaireId = questionnaire.QuestionnaireId;
     }
   }
 }

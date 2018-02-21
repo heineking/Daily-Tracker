@@ -18,6 +18,7 @@ using StructureMap;
 using System.IO;
 using FluentValidation;
 using Commands.Validators;
+using DataAccess.EntityFramework.Repositories;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
@@ -77,10 +78,18 @@ namespace Api {
         cfg.For<IEntityPredicate>().Use<EntityPredicate>();
 
         // register repos
+
+        // questionnaire
         cfg.For<QuestionnaireRepository>().Use<QuestionnaireRepository>();
         cfg.For<IRead<Questionnaire>>().Use<QuestionnaireRepository>();
         cfg.For<IDelete<Questionnaire>>().Use<QuestionnaireRepository>();
         cfg.For<ISave<Questionnaire>>().Use<QuestionnaireRepository>();
+
+        // questions
+        cfg.For<QuestionRepository>().Use<QuestionRepository>();
+        cfg.For<IRead<Question>>().Use<QuestionRepository>();
+        cfg.For<IDelete<Question>>().Use<QuestionRepository>();
+        cfg.For<ISave<Question>>().Use<QuestionRepository>();
 
         // unit of work
         cfg.For<IUnitOfWork>().Use<UnitOfWork>();
@@ -90,6 +99,7 @@ namespace Api {
         cfg.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => ctx.GetInstance(t));
         cfg.For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));
       });
+      
     }
 
     protected override void RequestStartup(IContainer container, IPipelines pipelines, NancyContext context) {

@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F267BD6B-5828-4A72-98FA-43D49930BCEE}"
 	ProjectSection(SolutionItems) = preProject
 		dailytracker.db = dailytracker.db
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.Contracts", "DataAccess.Contracts\DataAccess.Contracts.csproj", "{2E2DEDCC-55A5-46B2-B4E6-7B681DF48580}"
@@ -20,11 +21,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mediator", "Mediator\Mediat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.EntityFramework", "DataAccess.EntityFramework\DataAccess.EntityFramework.csproj", "{3D3FCE2D-5191-4EF5-8ABB-C04F814AC983}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{BDFE487B-68E4-4190-ABB8-7BD97A2C3ACA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{BDFE487B-68E4-4190-ABB8-7BD97A2C3ACA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commands", "Events\Commands.csproj", "{F8AF1FA3-B0A4-4FC1-9BDC-66F7FC0249F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands", "Events\Commands.csproj", "{F8AF1FA3-B0A4-4FC1-9BDC-66F7FC0249F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Queries", "Queries\Queries.csproj", "{1CECCB08-B520-488F-A286-9AA9CBBCF863}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queries", "Queries\Queries.csproj", "{1CECCB08-B520-488F-A286-9AA9CBBCF863}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
