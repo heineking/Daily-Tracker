@@ -5,25 +5,25 @@ using Commands.Events;
 using System;
 
 namespace Commands.EventHandlers {
-  public class SaveQuestionnaireHandler : IEventHandler<SaveQuestionnaire> {
+  public class UpdateQuestionnaireHandler : IEventHandler<UpdateQuestionnaire> {
     private readonly ISave<Questionnaire> _questionnaireSaver;
     private readonly IRead<Questionnaire> _questionnaireReader;
+    private readonly IHub _hub;
 
-    public SaveQuestionnaireHandler(IRead<Questionnaire> questionnaireReader, ISave<Questionnaire> questionnaireSaver) {
+    public UpdateQuestionnaireHandler(IRead<Questionnaire> questionnaireReader, ISave<Questionnaire> questionnaireSaver, IHub hub) {
       _questionnaireReader = questionnaireReader;
       _questionnaireSaver = questionnaireSaver;
+      _hub = hub;
     }
 
-    public void Handle(SaveQuestionnaire @event) {
-      var questionnaire = @event.ShouldCreate
-        ? new Questionnaire { CreatedDate = DateTime.Now }
-        : _questionnaireReader.GetById(@event.QuestionnaireId);
+    public void Handle(UpdateQuestionnaire @event) {
+      var questionnaire = _questionnaireReader.GetById(@event.QuestionnaireId);
 
       questionnaire.Name = @event.Name;
       questionnaire.Description = @event.Description;
       _questionnaireSaver.Save(questionnaire);
 
-      @event.QuestionnaireId = questionnaire.QuestionnaireId;
+      _hub.Publish(new Commit());
     }
   }
 }

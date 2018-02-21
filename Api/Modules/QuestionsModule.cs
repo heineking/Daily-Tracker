@@ -20,14 +20,19 @@ namespace Api.Modules {
       });
 
       Post("/", _ => {
-        var saveQuestion = this.Bind<SaveQuestion>();
-
-        hub.Publish(saveQuestion);
-        hub.Publish(new Commit());
-
+        var createQuestion = this.Bind<CreateQuestion>();
+        hub.Publish(createQuestion);
         return Negotiate
-          .WithStatusCode(HttpStatusCode.Created);
+          .WithStatusCode(HttpStatusCode.Created)
+          .WithModel(new { id = createQuestion.QuestionId });
+      });
 
+      Put("/{id:int}", _ => {
+        var updateQuestion = this.Bind<UpdateQuestion>();
+        updateQuestion.QuestionId = _.id;
+        hub.Publish(updateQuestion);
+        return Negotiate
+          .WithStatusCode(HttpStatusCode.Accepted);
       });
     }
   }

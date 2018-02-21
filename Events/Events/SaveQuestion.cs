@@ -4,10 +4,24 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Commands.Events {
-  public class SaveQuestion : IEvent {
-    public bool ShouldCreate => QuestionId == default(int);
-    public int QuestionId { get; set; }
+  public abstract class SaveQuestion {
+    public virtual int QuestionId { get; set; }
     public int QuestionnaireId { get; set; }
     public string Text { get; set; }
   }
+
+  public class CreateQuestion : SaveQuestion, IEvent {
+
+    public override int QuestionId { get => base.QuestionId; set { /* no-op */ } }
+
+    public void SetQuestionId(int questionId) {
+      base.QuestionId = questionId;
+    }
+
+  }
+
+  public class UpdateQuestion : SaveQuestion, IEvent {
+
+  }
+
 }
