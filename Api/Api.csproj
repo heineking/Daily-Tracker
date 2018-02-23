@@ -21,9 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Commands\Commands.csproj" />
     <ProjectReference Include="..\DataAccess.Contracts\DataAccess.Contracts.csproj" />
     <ProjectReference Include="..\DataAccess.EntityFramework\DataAccess.EntityFramework.csproj" />
-    <ProjectReference Include="..\Events\Commands.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\Mediator\Mediator.csproj" />
     <ProjectReference Include="..\Queries\Queries.csproj" />

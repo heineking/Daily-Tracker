@@ -23,12 +23,10 @@ namespace Tests.Integrations {
       Questions = new List<Question> {
         new Question {
           QuestionText = $"Test Question {id}",
-          QuestionOptions = new List<QuestionOption> {
-            new QuestionOption {
+          Options = new List<Option> {
+            new Option {
               OptionValue = 1,
-              Option = new Option {
-                OptionText = $"Option {id}"
-              }
+              OptionText = $"Option {id}"
             }
           }
         }

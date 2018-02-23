@@ -2,25 +2,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace DataAccessLayer.EntityFramework.Migrations
+namespace DataAccess.EntityFramework.Migrations
 {
     public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Options",
-                columns: table => new
-                {
-                    OptionId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    OptionText = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Options", x => x.OptionId);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Questionnaires",
                 columns: table => new
@@ -74,34 +61,6 @@ namespace DataAccessLayer.EntityFramework.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Results",
-                columns: table => new
-                {
-                    ResultId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    AdditionalNotes = table.Column<string>(nullable: true),
-                    QuestionnaireId = table.Column<int>(nullable: false),
-                    TakenDate = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Results", x => x.ResultId);
-                    table.ForeignKey(
-                        name: "FK_Results_Questionnaires_QuestionnaireId",
-                        column: x => x.QuestionnaireId,
-                        principalTable: "Questionnaires",
-                        principalColumn: "QuestionnaireId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Results_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserDirectory",
                 columns: table => new
                 {
@@ -121,30 +80,24 @@ namespace DataAccessLayer.EntityFramework.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "QuestionOption",
+                name: "Options",
                 columns: table => new
                 {
-                    QuestionOptionId = table.Column<int>(nullable: false)
+                    OptionId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    OptionId = table.Column<int>(nullable: true),
+                    OptionText = table.Column<string>(nullable: true),
                     OptionValue = table.Column<int>(nullable: false),
-                    QuestionId = table.Column<int>(nullable: true)
+                    QuestionId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_QuestionOption", x => x.QuestionOptionId);
+                    table.PrimaryKey("PK_Options", x => x.OptionId);
                     table.ForeignKey(
-                        name: "FK_QuestionOption_Options_OptionId",
-                        column: x => x.OptionId,
-                        principalTable: "Options",
-                        principalColumn: "OptionId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_QuestionOption_Questions_QuestionId",
+                        name: "FK_Options_Questions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "QuestionId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -153,9 +106,10 @@ namespace DataAccessLayer.EntityFramework.Migrations
                 {
                     AnswerId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    AdditionalNotes = table.Column<string>(nullable: true),
+                    AnswerDate = table.Column<DateTime>(nullable: false),
                     OptionId = table.Column<int>(nullable: false),
-                    ResultId = table.Column<int>(nullable: false)
+                    QuestionId = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -167,10 +121,16 @@ namespace DataAccessLayer.EntityFramework.Migrations
                         principalColumn: "OptionId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Answers_Results_ResultId",
-                        column: x => x.ResultId,
-                        principalTable: "Results",
-                        principalColumn: "ResultId",
+                        name: "FK_Answers_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
+                        principalColumn: "QuestionId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Answers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -180,34 +140,24 @@ namespace DataAccessLayer.EntityFramework.Migrations
                 column: "OptionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answers_ResultId",
+                name: "IX_Answers_QuestionId",
                 table: "Answers",
-                column: "ResultId");
+                column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuestionOption_OptionId",
-                table: "QuestionOption",
-                column: "OptionId");
+                name: "IX_Answers_UserId",
+                table: "Answers",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuestionOption_QuestionId",
-                table: "QuestionOption",
+                name: "IX_Options_QuestionId",
+                table: "Options",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_QuestionnaireId",
                 table: "Questions",
                 column: "QuestionnaireId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Results_QuestionnaireId",
-                table: "Results",
-                column: "QuestionnaireId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Results_UserId",
-                table: "Results",
-                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -216,22 +166,16 @@ namespace DataAccessLayer.EntityFramework.Migrations
                 name: "Answers");
 
             migrationBuilder.DropTable(
-                name: "QuestionOption");
-
-            migrationBuilder.DropTable(
                 name: "UserDirectory");
-
-            migrationBuilder.DropTable(
-                name: "Results");
 
             migrationBuilder.DropTable(
                 name: "Options");
 
             migrationBuilder.DropTable(
-                name: "Questions");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "Questionnaires");

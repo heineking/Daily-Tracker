@@ -5,7 +5,7 @@ namespace DataAccessLayer.Contracts.Entities {
     public int QuestionId { get; set; }
     public int QuestionnaireId { get; set; }
     public string QuestionText { get; set; }
-    public ICollection<QuestionOption> QuestionOptions { get; set; }
+    public ICollection<Option> Options { get; set; }
     public Questionnaire Questionnaire { get; set; }
   }
 }

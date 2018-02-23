@@ -13,14 +13,10 @@ namespace Infrastructure.Mapper {
         .ForMember(_ => _.Id, opt => opt.MapFrom(_ => _.QuestionnaireId));
 
       CreateMap<Question, QuestionModel>()
-        .ForMember(_ => _.Id, opt => opt.MapFrom(_ => _.QuestionId))
-        .ForMember(_ => _.Text, opt => opt.MapFrom(_ => _.QuestionText));
+        .ForMember(_ => _.Id, opt => opt.MapFrom(_ => _.QuestionId));
 
       CreateMap<Option, OptionModel>()
         .ForMember(_ => _.Id, opt => opt.MapFrom(_ => _.OptionId));
-
-      CreateMap<QuestionOption, QuestionOptionModel>()
-        .ForMember(_ => _.Id, opt => opt.MapFrom(_ => _.QuestionOptionId));
 
     }
   }

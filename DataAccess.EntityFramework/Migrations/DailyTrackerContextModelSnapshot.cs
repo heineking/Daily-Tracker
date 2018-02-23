@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace DataAccessLayer.EntityFramework.Migrations
+namespace DataAccess.EntityFramework.Migrations
 {
     [DbContext(typeof(DailyTrackerContext))]
     partial class DailyTrackerContextModelSnapshot : ModelSnapshot
@@ -24,17 +24,21 @@ namespace DataAccessLayer.EntityFramework.Migrations
                     b.Property<int>("AnswerId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AdditionalNotes");
+                    b.Property<DateTime>("AnswerDate");
 
                     b.Property<int>("OptionId");
 
-                    b.Property<int>("ResultId");
+                    b.Property<int>("QuestionId");
+
+                    b.Property<int>("UserId");
 
                     b.HasKey("AnswerId");
 
                     b.HasIndex("OptionId");
 
-                    b.HasIndex("ResultId");
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Answers");
                 });
@@ -46,7 +50,13 @@ namespace DataAccessLayer.EntityFramework.Migrations
 
                     b.Property<string>("OptionText");
 
+                    b.Property<int>("OptionValue");
+
+                    b.Property<int>("QuestionId");
+
                     b.HasKey("OptionId");
+
+                    b.HasIndex("QuestionId");
 
                     b.ToTable("Options");
                 });
@@ -81,48 +91,6 @@ namespace DataAccessLayer.EntityFramework.Migrations
                     b.HasKey("QuestionnaireId");
 
                     b.ToTable("Questionnaires");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Contracts.Entities.QuestionOption", b =>
-                {
-                    b.Property<int>("QuestionOptionId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("OptionId");
-
-                    b.Property<int>("OptionValue");
-
-                    b.Property<int?>("QuestionId");
-
-                    b.HasKey("QuestionOptionId");
-
-                    b.HasIndex("OptionId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("QuestionOption");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Contracts.Entities.Result", b =>
-                {
-                    b.Property<int>("ResultId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AdditionalNotes");
-
-                    b.Property<int>("QuestionnaireId");
-
-                    b.Property<DateTime>("TakenDate");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("ResultId");
-
-                    b.HasIndex("QuestionnaireId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Results");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Contracts.Entities.User", b =>
@@ -165,9 +133,22 @@ namespace DataAccessLayer.EntityFramework.Migrations
                         .HasForeignKey("OptionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("DataAccessLayer.Contracts.Entities.Result", "Result")
-                        .WithMany("Answers")
-                        .HasForeignKey("ResultId")
+                    b.HasOne("DataAccessLayer.Contracts.Entities.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DataAccessLayer.Contracts.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Contracts.Entities.Option", b =>
+                {
+                    b.HasOne("DataAccessLayer.Contracts.Entities.Question", "Question")
+                        .WithMany("Options")
+                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -176,30 +157,6 @@ namespace DataAccessLayer.EntityFramework.Migrations
                     b.HasOne("DataAccessLayer.Contracts.Entities.Questionnaire", "Questionnaire")
                         .WithMany("Questions")
                         .HasForeignKey("QuestionnaireId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Contracts.Entities.QuestionOption", b =>
-                {
-                    b.HasOne("DataAccessLayer.Contracts.Entities.Option", "Option")
-                        .WithMany("QuestionOptions")
-                        .HasForeignKey("OptionId");
-
-                    b.HasOne("DataAccessLayer.Contracts.Entities.Question", "Question")
-                        .WithMany("QuestionOptions")
-                        .HasForeignKey("QuestionId");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Contracts.Entities.Result", b =>
-                {
-                    b.HasOne("DataAccessLayer.Contracts.Entities.Questionnaire", "Questionnaire")
-                        .WithMany()
-                        .HasForeignKey("QuestionnaireId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DataAccessLayer.Contracts.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
