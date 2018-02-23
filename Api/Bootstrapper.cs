@@ -19,6 +19,7 @@ using System.IO;
 using FluentValidation;
 using Commands.Validators;
 using DataAccess.EntityFramework.Repositories;
+using Infrastructure.Proxies;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
@@ -52,7 +53,9 @@ namespace Api {
 
         // register the db context options
         cfg.For<DbContextOptions>().Use(builder.Options);
-        
+
+        // register our proxy factories
+        cfg.For<LoggerProxyFactory>().Use<LoggerProxyFactory>();
       });
 
     }
@@ -77,11 +80,13 @@ namespace Api {
         // strategies
         cfg.For<IEntityPredicate>().Use<EntityPredicate>();
 
+        var loggerProxyFactory = container.GetInstance<LoggerProxyFactory>();
+
         // register repos
 
         // questionnaire
         cfg.For<QuestionnaireRepository>().Use<QuestionnaireRepository>();
-        cfg.For<IRead<Questionnaire>>().Use<QuestionnaireRepository>();
+        cfg.For<IRead<Questionnaire>>().Use(ctx => loggerProxyFactory.Create<IRead<Questionnaire>>(ctx.GetInstance<QuestionnaireRepository>()));
         cfg.For<IDelete<Questionnaire>>().Use<QuestionnaireRepository>();
         cfg.For<ISave<Questionnaire>>().Use<QuestionnaireRepository>();
 
