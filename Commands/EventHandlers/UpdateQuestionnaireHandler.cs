@@ -21,6 +21,7 @@ namespace Commands.EventHandlers {
 
       questionnaire.Name = @event.Name;
       questionnaire.Description = @event.Description;
+      questionnaire.Public = @event.Public;
       _questionnaireSaver.Save(questionnaire);
 
       _hub.Publish(new Commit());

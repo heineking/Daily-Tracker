@@ -18,9 +18,11 @@ namespace Commands.EventHandlers {
 
     public void Handle(CreateQuestionnaire @event) {
       var questionnaire = new Questionnaire {
+        CreatedById = @event.UserId,
         CreatedDate = DateTime.Now,
         Description = @event.Description,
         Name = @event.Name,
+        Public = @event.Public
       };
 
       _questionnaireSaver.Save(questionnaire);

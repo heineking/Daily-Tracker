@@ -82,13 +82,19 @@ namespace DataAccess.EntityFramework.Migrations
                     b.Property<int>("QuestionnaireId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("CreatedById");
+
                     b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Name");
 
+                    b.Property<bool>("Public");
+
                     b.HasKey("QuestionnaireId");
+
+                    b.HasIndex("CreatedById");
 
                     b.ToTable("Questionnaires");
                 });
@@ -157,6 +163,14 @@ namespace DataAccess.EntityFramework.Migrations
                     b.HasOne("DataAccessLayer.Contracts.Entities.Questionnaire", "Questionnaire")
                         .WithMany("Questions")
                         .HasForeignKey("QuestionnaireId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Contracts.Entities.Questionnaire", b =>
+                {
+                    b.HasOne("DataAccessLayer.Contracts.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

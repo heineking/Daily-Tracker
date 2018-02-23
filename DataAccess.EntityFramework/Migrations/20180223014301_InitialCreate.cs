@@ -9,21 +9,6 @@ namespace DataAccess.EntityFramework.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Questionnaires",
-                columns: table => new
-                {
-                    QuestionnaireId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Questionnaires", x => x.QuestionnaireId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -41,22 +26,25 @@ namespace DataAccess.EntityFramework.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Questions",
+                name: "Questionnaires",
                 columns: table => new
                 {
-                    QuestionId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    QuestionText = table.Column<string>(nullable: true),
                     QuestionnaireId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CreatedById = table.Column<int>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Public = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Questions", x => x.QuestionId);
+                    table.PrimaryKey("PK_Questionnaires", x => x.QuestionnaireId);
                     table.ForeignKey(
-                        name: "FK_Questions_Questionnaires_QuestionnaireId",
-                        column: x => x.QuestionnaireId,
-                        principalTable: "Questionnaires",
-                        principalColumn: "QuestionnaireId",
+                        name: "FK_Questionnaires_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -76,6 +64,26 @@ namespace DataAccess.EntityFramework.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Questions",
+                columns: table => new
+                {
+                    QuestionId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    QuestionText = table.Column<string>(nullable: true),
+                    QuestionnaireId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Questions", x => x.QuestionId);
+                    table.ForeignKey(
+                        name: "FK_Questions_Questionnaires_QuestionnaireId",
+                        column: x => x.QuestionnaireId,
+                        principalTable: "Questionnaires",
+                        principalColumn: "QuestionnaireId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -155,6 +163,11 @@ namespace DataAccess.EntityFramework.Migrations
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Questionnaires_CreatedById",
+                table: "Questionnaires",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Questions_QuestionnaireId",
                 table: "Questions",
                 column: "QuestionnaireId");
@@ -172,13 +185,13 @@ namespace DataAccess.EntityFramework.Migrations
                 name: "Options");
 
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
                 name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "Questionnaires");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }
