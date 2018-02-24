@@ -21,6 +21,9 @@ using Infrastructure.Proxies;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Formatting.Json;
+using Serilog.Filters;
+using Infrastructure.Profiling;
+using System.Diagnostics;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
@@ -41,9 +44,15 @@ namespace Api {
       var logger = new LoggerConfiguration()
         .MinimumLevel.Debug()
         .Enrich.WithExceptionDetails()
+        .WriteTo.Logger(l =>
+          l.Filter
+          .ByIncludingOnly(Matching.WithProperty("Elapsed"))
+          .WriteTo.RollingFile("logs\\Perf-{Date}.log")
+        )
         .WriteTo.RollingFile(
           new JsonFormatter(renderMessage: true),
-          "logs\\dailytracker-{Date}.log")
+          "logs\\dailytracker-{Date}.log"
+        )
         .CreateLogger();
           
       // TODO: move this to start up?
@@ -66,10 +75,11 @@ namespace Api {
 
         // register our serilog provider
         cfg.For<ILogger>().Use(logger);
+        cfg.For<IStopwatch>().Use(ctx => new StopwatchAdapter(new Stopwatch()));
 
         // register our proxy factories
         cfg.For<LoggerProxyFactory>().Use<LoggerProxyFactory>();
-
+        cfg.For<TimerProxyFactory>().Use<TimerProxyFactory>();
       });
 
     }
@@ -95,24 +105,26 @@ namespace Api {
         cfg.For<IEntityPredicate>().Use<EntityPredicate>();
 
         var loggerProxyFactory = container.GetInstance<LoggerProxyFactory>();
-
+        var timerProxyFactory = container.GetInstance<TimerProxyFactory>();
         // register repos
 
-        // questionnaire
-        cfg.For<QuestionnaireRepository>().Use<QuestionnaireRepository>();
-        cfg.For<IRead<Questionnaire>>().Use(ctx => loggerProxyFactory.Create<IRead<Questionnaire>>(ctx.GetInstance<QuestionnaireRepository>()));
-        cfg.For<IDelete<Questionnaire>>().Use(ctx => loggerProxyFactory.Create<IDelete<Questionnaire>>(ctx.GetInstance<QuestionnaireRepository>()));
-        cfg.For<ISave<Questionnaire>>().Use(ctx => loggerProxyFactory.Create<ISave<Questionnaire>>(ctx.GetInstance<QuestionnaireRepository>()));
+        //// questionnaire
+        //cfg.For<QuestionnaireRepository>()
+        //  .Use<QuestionnaireRepository>()
+        //  .DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
+
+        cfg.For<IRead<Questionnaire>>().Use<QuestionnaireRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
+        cfg.For<IDelete<Questionnaire>>().Use<QuestionnaireRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
+        cfg.For<ISave<Questionnaire>>().Use<QuestionnaireRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
 
         // questions
-        cfg.For<QuestionRepository>().Use<QuestionRepository>();
-        cfg.For<IRead<Question>>().Use<QuestionRepository>();
-        cfg.For<IDelete<Question>>().Use<QuestionRepository>();
-        cfg.For<ISave<Question>>().Use<QuestionRepository>();
+        cfg.For<QuestionRepository>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
+        cfg.For<IRead<Question>>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
+        cfg.For<IDelete<Question>>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
+        cfg.For<ISave<Question>>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
 
         // unit of work
-        cfg.For<UnitOfWork>().Use<UnitOfWork>();
-        cfg.For<IUnitOfWork>().Use(ctx => loggerProxyFactory.Create<IUnitOfWork>(ctx.GetInstance<UnitOfWork>()));
+        cfg.For<IUnitOfWork>().Use<UnitOfWork>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
 
         // mediator
         cfg.For<IHub>().Use<Hub>();

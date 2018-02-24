@@ -10,7 +10,7 @@ namespace Infrastructure.Proxies {
     public MethodInfo MethodInfo { get; set; }
   }
 
-  public class LoggerProxy<TDecorated> : DispatchProxy {
+  public class MethodProxy<TDecorated> : DispatchProxy {
     private TDecorated _decorated;
     private Predicate<MethodInfo> _filter;
 

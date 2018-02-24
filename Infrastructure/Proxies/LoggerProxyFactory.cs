@@ -9,8 +9,8 @@ namespace Infrastructure.Proxies {
       _logger = logger;
     }
     public T Create<T>(T implementation) {
-      object decorated = DispatchProxy.Create<T, LoggerProxy<T>>();
-      var proxy = ((LoggerProxy<T>)decorated);
+      object decorated = DispatchProxy.Create<T, MethodProxy<T>>();
+      var proxy = ((MethodProxy<T>)decorated);
       proxy.Decorate(implementation);
       proxy.OnBeforeExecute += (t, e) => _logger.Information("Before Executing {MethodName} from {DeclaringTypeFullName}", e.Name, e.DeclaringType.FullName);
       proxy.OnAfterExecute += (t, e) => _logger.Information("After Executing {MethodName} from {DeclaringTypeFullName}", e.Name, e.DeclaringType.FullName);
