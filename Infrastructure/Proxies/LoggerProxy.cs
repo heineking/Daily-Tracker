@@ -38,7 +38,6 @@ namespace Infrastructure.Proxies {
         eventHandlerRunner(OnErrorExecute);
         throw ex;
       }
-      throw new NotImplementedException();
     }
   }
 }
