@@ -16,10 +16,11 @@ using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.StructureMap;
 using StructureMap;
 using System.IO;
-using FluentValidation;
-using Commands.Validators;
 using DataAccess.EntityFramework.Repositories;
 using Infrastructure.Proxies;
+using Serilog;
+using Serilog.Exceptions;
+using Serilog.Formatting.Json;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
@@ -36,6 +37,15 @@ namespace Api {
     protected override void ConfigureApplicationContainer(IContainer existingContainer) {
       base.ConfigureApplicationContainer(existingContainer);
 
+      // setup our logger for the whole application
+      var logger = new LoggerConfiguration()
+        .MinimumLevel.Debug()
+        .Enrich.WithExceptionDetails()
+        .WriteTo.RollingFile(
+          new JsonFormatter(renderMessage: true),
+          "logs\\dailytracker-{Date}.log")
+        .CreateLogger();
+          
       // TODO: move this to start up?
       // create the db context options
       var configuration = new ConfigurationBuilder()
@@ -54,8 +64,12 @@ namespace Api {
         // register the db context options
         cfg.For<DbContextOptions>().Use(builder.Options);
 
+        // register our serilog provider
+        cfg.For<ILogger>().Use(logger);
+
         // register our proxy factories
         cfg.For<LoggerProxyFactory>().Use<LoggerProxyFactory>();
+
       });
 
     }
@@ -87,8 +101,8 @@ namespace Api {
         // questionnaire
         cfg.For<QuestionnaireRepository>().Use<QuestionnaireRepository>();
         cfg.For<IRead<Questionnaire>>().Use(ctx => loggerProxyFactory.Create<IRead<Questionnaire>>(ctx.GetInstance<QuestionnaireRepository>()));
-        cfg.For<IDelete<Questionnaire>>().Use<QuestionnaireRepository>();
-        cfg.For<ISave<Questionnaire>>().Use<QuestionnaireRepository>();
+        cfg.For<IDelete<Questionnaire>>().Use(ctx => loggerProxyFactory.Create<IDelete<Questionnaire>>(ctx.GetInstance<QuestionnaireRepository>()));
+        cfg.For<ISave<Questionnaire>>().Use(ctx => loggerProxyFactory.Create<ISave<Questionnaire>>(ctx.GetInstance<QuestionnaireRepository>()));
 
         // questions
         cfg.For<QuestionRepository>().Use<QuestionRepository>();
@@ -97,7 +111,8 @@ namespace Api {
         cfg.For<ISave<Question>>().Use<QuestionRepository>();
 
         // unit of work
-        cfg.For<IUnitOfWork>().Use<UnitOfWork>();
+        cfg.For<UnitOfWork>().Use<UnitOfWork>();
+        cfg.For<IUnitOfWork>().Use(ctx => loggerProxyFactory.Create<IUnitOfWork>(ctx.GetInstance<UnitOfWork>()));
 
         // mediator
         cfg.For<IHub>().Use<Hub>();
