@@ -7,12 +7,9 @@ namespace Security {
   public class Hasher : IHasher {
     private readonly IHashSettings _settings;
     private readonly RNGCryptoServiceProvider _crypto;
-    private readonly HMACSHA256 _hmacsha256;
-
     public Hasher(IHashSettings hashSettings) {
       _settings = hashSettings;
       _crypto = new RNGCryptoServiceProvider();
-      _hmacsha256 = new HMACSHA256(Encoding.ASCII.GetBytes(_settings.Key));
     }
 
     public string GenerateHash(string str) {
@@ -31,10 +28,6 @@ namespace Security {
     private byte[] HashWithSalt(string str, byte[] salt) {
       var pdkdf2 = new Rfc2898DeriveBytes(str, salt, (int)_settings.Iteratations);
       return pdkdf2.GetBytes((int)_settings.HashLength);
-    }
-
-    private byte[] Keyed(byte[] bytes) {
-      return _hmacsha256.ComputeHash(bytes);
     }
 
     private byte[] Salt {

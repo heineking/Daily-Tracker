@@ -7,6 +7,5 @@ namespace Security.Contracts {
     uint SaltLength { get; }
     uint Iteratations { get; }
     uint HashLength { get; }
-    string Key { get; }
   }
 }

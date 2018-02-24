@@ -13,13 +13,10 @@ namespace Tests.Unit.Security {
     public uint SaltLength { get; set; }
     public uint Iteratations { get; set; }
     public uint HashLength { get; set; }
-    public string Key { get; set; }
     public HashSettings() {
-      var rnd = new Random();
-      SaltLength = (uint)rnd.Next(10, 30);
-      Iteratations = (uint)rnd.Next(50, 100);
-      HashLength = (uint)rnd.Next(32, 64);
-      Key = new string(Enumerable.Range(1, rnd.Next(16, 32)).Select(i => (char)rnd.Next(64, 70)).ToArray());
+      SaltLength = 16;
+      Iteratations = 100;
+      HashLength = 48;
     }
   }
   [TestClass]
