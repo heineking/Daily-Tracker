@@ -95,5 +95,34 @@ namespace Tests.Unit.Security {
       // assert
       combined.IsEqualTo(bytes).ShouldBeTrue();
     }
+
+    [TestMethod]
+    public void IsEqualToLinearCompare_Should_Return_True_When_Comparing_Two_Equal_Byte_Arrays() {
+      // arrange
+      var str = "abcd";
+      var a = Convert.FromBase64String(str);
+      var b = Convert.FromBase64String(str);
+
+      // act
+      var result = a.IsEqualToLinearCompare(b);
+
+      // assert
+      result.ShouldBeTrue();
+    }
+
+    [TestMethod]
+    public void IsEqualToLinearCompare_Should_Return_False_When_Comparing_Two_Equal_Byte_Arrays() {
+      // arrange
+      var str = "abcd";
+      var str2 = "hijk";
+      var a = Convert.FromBase64String(str);
+      var b = Convert.FromBase64String(str2);
+
+      // act
+      var result = a.IsEqualToLinearCompare(b);
+
+      // assert
+      result.ShouldBeFalse();
+    }
   }
 }

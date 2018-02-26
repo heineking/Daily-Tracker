@@ -25,6 +25,19 @@ namespace Security.Contracts {
 
       return true;
     }
+
+    /// <summary>
+    /// https://gist.github.com/adrianstevens/b053ec17cfc5ca868e71
+    /// </summary>
+    /// <param></param>
+    /// <returns></returns>
+    public static bool IsEqualToLinearCompare(this byte[] a, byte[] b) {
+      uint diff = (uint)a.Length ^ (uint)b.Length;
+      for (int i = 0; i < a.Length && i < b.Length; i++)
+        diff |= (uint)(a[i] ^ b[i]);
+      return diff == 0;
+    }
+
     public static byte[] CombineWith(this byte[] lhs, byte[] rhs) {
       var totalLen = lhs.Length + rhs.Length;
       var combined = new byte[totalLen];

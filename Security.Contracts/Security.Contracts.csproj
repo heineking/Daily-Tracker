@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="IFred.cs" />
+    <Compile Remove="IHasher.cs" />
   </ItemGroup>
 
 </Project>
