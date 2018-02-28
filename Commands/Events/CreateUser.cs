@@ -1,6 +1,11 @@
-﻿using Mediator.Contracts;
+﻿using System.Collections.Generic;
+using Commands.Contracts;
+using Mediator.Contracts;
+using System;
+using Infrastructure.Errors;
+
 namespace Commands.Events {
-  public class CreateUser : IEvent {
+  public class CreateUser : IEvent, IValidatable<CreateUser> {
     public int UserId { get; private set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -12,6 +17,11 @@ namespace Commands.Events {
 
     public void SetUserId(int id) {
       UserId = id;
+    }
+
+    public bool Validate(IValidator<CreateUser> validator, out IEnumerable<Error> brokenRules) {
+      brokenRules = validator.BrokenRules(this);
+      return validator.IsValid(this);
     }
   }
 }

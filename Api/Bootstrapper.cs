@@ -27,6 +27,9 @@ using System.Diagnostics;
 using Api.Settings;
 using Security.Contracts.Hashing;
 using Security;
+using Commands.Contracts;
+using Commands.Events;
+using Commands.Validators;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
@@ -89,6 +92,9 @@ namespace Api {
         cfg.For<IHashSettings>().Use<HashSettings>();
         cfg.For<IHasherFactory>().Use<HasherFactory>();
         cfg.For<IHasher>().Use(ctx => ctx.GetInstance<IHasherFactory>().Create());
+
+        // register our validators that do not require any request specific classes
+        cfg.For<IValidator<CreateUser>>().Use<CreateUserPersistenceValidator>();
       });
 
     }
