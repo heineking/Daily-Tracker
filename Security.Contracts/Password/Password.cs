@@ -3,23 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
 
 namespace Security.Contracts {
-  public static class PasswordConstants {
-    public static List<string> Order = new List<string> {
-      nameof(Password.Algorithm),
-      nameof(Password.Iterations),
-      nameof(Password.Hash),
-      nameof(Password.Salt)
-    };
-  }
 
   public class Password {
 
     private const char Delimiter = ':';
 
-    private IList<string> Order;
+    private IList<string> Order = new List<string> {
+      nameof(Password.Algorithm),
+      nameof(Password.Iterations),
+      nameof(Password.Hash),
+      nameof(Password.Salt)
+    };
 
     private Dictionary<string, Func<object, string>> ToStringsMap = new Dictionary<string, Func<object, string>> {
       { nameof(Algorithm), (algo) => ((int)algo).ToString() },
@@ -32,9 +28,9 @@ namespace Security.Contracts {
     public IReadOnlyCollection<byte> Salt { get; }
     public int Iterations { get; }
     public HashAlgorithm Algorithm { get; }
+    public int? ComputationTimeInMs { get; }
 
-    public Password(string str, IList<string> order) {
-      Order = order;
+    public Password(string str) {
       var tokens = str.Split(new char[] { Delimiter }).ToList();
       var hashToken = tokens.ElementAt(GetPropertyIndex(nameof(Hash)));
       var saltToken = tokens.ElementAt(GetPropertyIndex(nameof(Salt)));
@@ -48,7 +44,7 @@ namespace Security.Contracts {
       EnsurePreconditions();
     }
 
-    public Password(byte[] hash, byte[] salt, int iterations, HashAlgorithm algorithm, IList<string> Order) {
+    public Password(byte[] hash, byte[] salt, int iterations, HashAlgorithm algorithm) {
       Hash = hash;
       Salt = salt;
       Iterations = iterations;
@@ -69,6 +65,10 @@ namespace Security.Contracts {
       var a = password.Hash.ToArray();
       var b = Hash.ToArray();
       return a.IsEqualToLinearCompare(b);
+    }
+
+    public bool SettingsUpdated(Password password) {
+      return password.Iterations != Iterations || password.Algorithm != Algorithm || password.Hash.Count != Hash.Count || password.Salt.Count != Salt.Count;
     }
 
     private int GetPropertyIndex(string propertyName) {

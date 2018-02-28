@@ -19,5 +19,8 @@ namespace Security {
           throw new NotImplementedException($"Factory not implemented to handle this HashAlgorithm type = {algorithm}");
       }
     }
+    public IHasher Create() {
+      return Create(_settings.Algorithm);
+    }
   }
 }

@@ -18,5 +18,6 @@ namespace Security.Contracts.Hashing {
     int Iterations { get; }
     int SaltBytes { get; }
     int HashBytes { get; }
+    HashAlgorithm Algorithm { get; }
   }
 }

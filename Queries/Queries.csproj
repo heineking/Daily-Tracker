@@ -13,8 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Commands\Commands.csproj" />
     <ProjectReference Include="..\DataAccess.Contracts\DataAccess.Contracts.csproj" />
     <ProjectReference Include="..\Mediator\Mediator.csproj" />
+    <ProjectReference Include="..\Security.Contracts\Security.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,9 +4,4 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="IFred.cs" />
-    <Compile Remove="IHasher.cs" />
-  </ItemGroup>
-
 </Project>

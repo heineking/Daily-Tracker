@@ -9,18 +9,6 @@ using Security.Contracts.Hashing;
 namespace Tests.Unit.Security {
   [TestClass]
   public class PasswordTest {
-    private readonly IList<string> _order;
-
-    public PasswordTest() {
-      _order = new string[] {
-        nameof(Password.Algorithm),
-        nameof(Password.Iterations),
-        nameof(Password.Hash),
-        nameof(Password.Salt)
-      };
-    }
-
-    public HashAlgorithm HashingAlgorithm { get; private set; }
     
     [TestMethod]
     public void Should_Correctly_Parse_A_Delimited_Into_A_Constructed_Password() {
@@ -28,7 +16,7 @@ namespace Tests.Unit.Security {
       var str = "0:10000:abcd:efgh";
 
       // act
-      var password = new Password(str, _order);
+      var password = new Password(str);
 
       // assert
       password.Algorithm.ShouldBe(HashAlgorithm.PDKDF2);
@@ -41,7 +29,7 @@ namespace Tests.Unit.Security {
     public void Calling_To_String_Should_Return_The_Same_String_That_Was_Passed_In() {
       // arrange
       var str = "0:100:abcd:efgh";
-      var pswd = new Password(str, _order);
+      var pswd = new Password(str);
 
       // act
       var result = pswd.ToString();
@@ -56,8 +44,8 @@ namespace Tests.Unit.Security {
       var str = "0:100:abcd:efgh";
       var str2 = "0:100:abcd:ijkl";
 
-      var pswd = new Password(str, _order);
-      var pswd2 = new Password(str2, _order);
+      var pswd = new Password(str);
+      var pswd2 = new Password(str2);
 
       // act
       var result = pswd.IsEqualTo(pswd2);

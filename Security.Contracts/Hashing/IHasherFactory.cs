@@ -5,5 +5,6 @@ using System.Text;
 namespace Security.Contracts.Hashing {
   public interface IHasherFactory {
     IHasher Create(HashAlgorithm algorithm);
+    IHasher Create();
   }
 }
