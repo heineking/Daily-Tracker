@@ -19,9 +19,9 @@ namespace Commands.Events {
       UserId = id;
     }
 
-    public bool Validate(IValidator<CreateUser> validator, out IEnumerable<Error> brokenRules) {
-      brokenRules = validator.BrokenRules(this);
-      return validator.IsValid(this);
+    public IEnumerable<Error> Validate(IValidator<CreateUser> validator) {
+      var brokenRules = validator.Errors(this);
+      return brokenRules;
     }
   }
 }

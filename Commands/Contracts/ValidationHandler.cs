@@ -18,7 +18,7 @@ namespace Commands.Contracts {
 
     public Tuple<bool, IEnumerable<Error>> IsValid<TValidator, TEntity>(TEntity entity) where TValidator : IValidator<TEntity> where TEntity : IValidatable<TEntity> {
       var validator = _singleInstanceFactory(typeof(TValidator)) as IValidator<TEntity>;
-      var errors = validator.BrokenRules(entity).ToList();
+      var errors = validator.Errors(entity).ToList();
       return new Tuple<bool, IEnumerable<Error>>(errors.Count == 0, errors);
     }
   }

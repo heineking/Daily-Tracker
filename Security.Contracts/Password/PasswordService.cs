@@ -12,6 +12,11 @@ namespace Security.Contracts {
       _hasherFactory = hasherFactory;
     }
 
+    public bool IsPasswordValid(string plainTextPassword, string passwordHash, out string updatedPasswordHash) {
+      var password = new Password(passwordHash);
+      return IsPasswordValid(plainTextPassword, password, out updatedPasswordHash);
+    }
+
     public bool IsPasswordValid(string plainTextPassword, Password password) {
       var hasher = _hasherFactory.Create(password.Algorithm);
       var compareAgainst = hasher.CreatePassword(plainTextPassword, password.Salt.ToArray(), password.Hash.Count, password.Iterations);

@@ -5,6 +5,6 @@ using System.Text;
 
 namespace Commands.Contracts {
   public interface IValidatable<T> {
-    bool Validate(IValidator<T> validator, out IEnumerable<Error> brokenRules);
+    IEnumerable<Error> Validate(IValidator<T> validator);
   }
 }
