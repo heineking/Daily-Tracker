@@ -29,8 +29,10 @@ namespace Queries.RequestHandlers {
       var password = new Password(user.Password);
       var updated = string.Empty;
       if (_passwordService.IsPasswordValid(request.Password, password, out updated)) {
-        user.Password = updated;
-        _hub.Publish(new Commit());
+        if(!string.IsNullOrEmpty(updated)) {
+          user.Password = updated;
+          _hub.Publish(new Commit());
+        }
         return true;
       }
       return false;
