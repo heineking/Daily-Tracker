@@ -1,14 +1,14 @@
-﻿using Commands.Events;
-using DataAccess.Contracts.Repositories;
+﻿using DataAccess.Contracts.Repositories;
 using DataAccessLayer.Contracts.Entities;
 using Mediator.Contracts;
 using Queries.Requests;
 using Security.Contracts;
 using Security.Contracts.Hashing;
+using System;
 using System.Linq;
 
 namespace Queries.RequestHandlers {
-  public class ValidateLoginHandler : IRequestHandler<ValidateLogin, bool> {
+  public class ValidateLoginHandler : IRequestHandler<ValidateLogin, Tuple<bool, string>> {
     private readonly IRead<UserDirectory> _userDirectoryReader;
     private readonly ISave<UserDirectory> _userDirectorySaver;
     private readonly PasswordService _passwordService;
@@ -20,7 +20,7 @@ namespace Queries.RequestHandlers {
       _userDirectorySaver = userDirectorySaver;
       _hub = hub;
     }
-    public bool Handle(ValidateLogin request) {
+    public Tuple<bool, string> Handle(ValidateLogin request) {
       var user = _userDirectoryReader
         .Where(ud => ud.Username == request.Username)
         .ToList()
@@ -28,14 +28,8 @@ namespace Queries.RequestHandlers {
 
       var password = new Password(user.Password);
       var updated = string.Empty;
-      if (_passwordService.IsPasswordValid(request.Password, password, out updated)) {
-        if(!string.IsNullOrEmpty(updated)) {
-          user.Password = updated;
-          _hub.Publish(new Commit());
-        }
-        return true;
-      }
-      return false;
+      var isValid = _passwordService.IsPasswordValid(request.Password, password, out updated);
+      return new Tuple<bool, string>(isValid, updated);
     }
   }
 }

@@ -24,6 +24,9 @@ using Serilog.Formatting.Json;
 using Serilog.Filters;
 using Infrastructure.Profiling;
 using System.Diagnostics;
+using Api.Settings;
+using Security.Contracts.Hashing;
+using Security;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
@@ -38,7 +41,7 @@ namespace Api {
     }
 
     protected override void ConfigureApplicationContainer(IContainer existingContainer) {
-      base.ConfigureApplicationContainer(existingContainer);
+      //base.ConfigureApplicationContainer(existingContainer);
 
       // setup our logger for the whole application
       var logger = new LoggerConfiguration()
@@ -49,9 +52,10 @@ namespace Api {
           .ByIncludingOnly(Matching.WithProperty("Elapsed"))
           .WriteTo.RollingFile("logs\\Perf-{Date}.log")
         )
-        .WriteTo.RollingFile(
-          new JsonFormatter(renderMessage: true),
-          "logs\\dailytracker-{Date}.log"
+        .WriteTo.Logger(l =>
+          l.Filter
+            .ByExcluding(Matching.WithProperty("Elapsed"))
+            .WriteTo.RollingFile("logs\\dailytracker-{Date}.log")
         )
         .CreateLogger();
           
@@ -80,6 +84,11 @@ namespace Api {
         // register our proxy factories
         cfg.For<LoggerProxyFactory>().Use<LoggerProxyFactory>();
         cfg.For<TimerProxyFactory>().Use<TimerProxyFactory>();
+
+        // register hashing classes
+        cfg.For<IHashSettings>().Use<HashSettings>();
+        cfg.For<IHasherFactory>().Use<HasherFactory>();
+        cfg.For<IHasher>().Use(ctx => ctx.GetInstance<IHasherFactory>().Create());
       });
 
     }
@@ -108,20 +117,25 @@ namespace Api {
         var timerProxyFactory = container.GetInstance<TimerProxyFactory>();
         // register repos
 
-        //// questionnaire
-        //cfg.For<QuestionnaireRepository>()
-        //  .Use<QuestionnaireRepository>()
-        //  .DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
-
-        cfg.For<IRead<Questionnaire>>().Use<QuestionnaireRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
-        cfg.For<IDelete<Questionnaire>>().Use<QuestionnaireRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
-        cfg.For<ISave<Questionnaire>>().Use<QuestionnaireRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
+        // questionnaires
+        cfg.For<IRead<Questionnaire>>().Use<QuestionnaireRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
+        cfg.For<IDelete<Questionnaire>>().Use<QuestionnaireRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
+        cfg.For<ISave<Questionnaire>>().Use<QuestionnaireRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
 
         // questions
-        cfg.For<QuestionRepository>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
-        cfg.For<IRead<Question>>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
-        cfg.For<IDelete<Question>>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
-        cfg.For<ISave<Question>>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
+        cfg.For<IRead<Question>>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
+        cfg.For<IDelete<Question>>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
+        cfg.For<ISave<Question>>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
+
+        // users
+        cfg.For<IRead<User>>().Use<UserRepository>().DecorateWith(u => loggerProxyFactory.Create(timerProxyFactory.Create(u)));
+        cfg.For<IDelete<User>>().Use<UserRepository>().DecorateWith(u => loggerProxyFactory.Create(timerProxyFactory.Create(u)));
+        cfg.For<ISave<User>>().Use<UserRepository>().DecorateWith(u => loggerProxyFactory.Create(timerProxyFactory.Create(u)));
+
+        // user directory
+        cfg.For<IRead<UserDirectory>>().Use<UserDirectoryRepository>().DecorateWith(u => loggerProxyFactory.Create(timerProxyFactory.Create(u)));
+        cfg.For<ISave<UserDirectory>>().Use<UserDirectoryRepository>().DecorateWith(u => loggerProxyFactory.Create(timerProxyFactory.Create(u)));
+        cfg.For<IDelete<UserDirectory>>().Use<UserDirectoryRepository>().DecorateWith(u => loggerProxyFactory.Create(timerProxyFactory.Create(u)));
 
         // unit of work
         cfg.For<IUnitOfWork>().Use<UnitOfWork>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q))); ;
