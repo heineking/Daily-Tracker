@@ -93,8 +93,6 @@ namespace Api {
         cfg.For<IHasherFactory>().Use<HasherFactory>();
         cfg.For<IHasher>().Use(ctx => ctx.GetInstance<IHasherFactory>().Create());
 
-        // register our validators that do not require any request specific classes
-        cfg.For<IValidator<CreateUser>>().Use<CreateUserPersistenceValidator>();
       });
 
     }
@@ -111,6 +109,7 @@ namespace Api {
           scanner.WithDefaultConventions();
           scanner.AddAllTypesOf(typeof(IRequestHandler<,>));
           scanner.AddAllTypesOf(typeof(IEventHandler<>));
+          scanner.AddAllTypesOf(typeof(IValidator<>));
         });
 
         // start context
@@ -148,8 +147,12 @@ namespace Api {
 
         // mediator
         cfg.For<IHub>().Use<Hub>();
+        cfg.For<IValidatorHandler>().Use<ValidatorHandler>();
+
         cfg.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => ctx.GetInstance(t));
         cfg.For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));
+
+        // validator hub
       });
       
     }

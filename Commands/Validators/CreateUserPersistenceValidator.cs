@@ -1,5 +1,7 @@
 ﻿using Commands.Contracts;
 using Commands.Events;
+using DataAccess.Contracts.Repositories;
+using DataAccessLayer.Contracts.Entities;
 using Infrastructure.Errors;
 using System;
 using System.Collections.Generic;
@@ -8,21 +10,27 @@ using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Commands.Validators
-{
-  public class CreateUserPersistenceValidator : IValidator<CreateUser> {
+namespace Commands.Validators {
+  public class UniqueUsernameValidator : IValidator<CreateUser> {
+    private readonly IRead<UserDirectory> _userDirectoryReader;
 
-    private IEnumerable<Error> RequiredStringProperties(CreateUser user, params string[] propertyNames) {
-      var propertyInfos = typeof(CreateUser).GetProperties();
-      foreach(var propName in propertyNames) {
-        var propertyInfo = propertyInfos.Single(p => p.Name == propName);
-        var propertyValue = Convert.ToString(propertyInfo.GetValue(user, null));
-        if (string.IsNullOrEmpty(propertyValue)) {
-          yield return new Error(propName, $"{propName} cannot be null or empty");
-        }
-      }
+    public UniqueUsernameValidator(IRead<UserDirectory> userDirectoryReader) {
+      _userDirectoryReader = userDirectoryReader;
+    }
+
+    public IEnumerable<Error> BrokenRules(CreateUser entity) {
+      var usernameExists = _userDirectoryReader.Where(ud => ud.Username == entity.Username).SingleOrDefault();
+      if (usernameExists != null)
+        yield return new Error(nameof(entity.Username), "Username already exists");
       yield break;
     }
+
+    public bool IsValid(CreateUser entity) {
+      return BrokenRules(entity).Count() == 0;
+    }
+  }
+
+  public class CreateUserValidator : IValidator<CreateUser> {
 
     private bool IsEmailValid(string email) {
       try {
@@ -33,22 +41,32 @@ namespace Commands.Validators
       }
     }
 
-    public IEnumerable<Error> BrokenRules(CreateUser entity) {
-      
-      var errorMessages = RequiredStringProperties(entity,
-        nameof(entity.FirstName),
-        nameof(entity.LastName),
-        nameof(entity.BirthDate),
-        nameof(entity.Username),
-        nameof(entity.Password));
+    private readonly IValidatorHandler _validatorHandler;
 
-      foreach (var errorMessage in errorMessages) {
-        yield return errorMessage;
+    public CreateUserValidator(IValidatorHandler validatorHandler) {
+      _validatorHandler = validatorHandler;
+    }
+
+    public IEnumerable<Error> BrokenRules(CreateUser entity) {
+      if (string.IsNullOrEmpty(entity.Username)) {
+        yield return new Error(nameof(entity.Username), "Username is required");
+      } else {
+        var (isValid, errors) = _validatorHandler.IsValid<UniqueUsernameValidator, CreateUser>(entity);
+        foreach (var error in errors) {
+          yield return error;
+        }
       }
+
+      if (string.IsNullOrEmpty(entity.FirstName))
+        yield return new Error(nameof(entity.FirstName), "First Name is required");
+
+      if (string.IsNullOrEmpty(entity.LastName))
+        yield return new Error(nameof(entity.LastName), "Last Name is required");
+
 
       if (!IsEmailValid(entity.Email))
         yield return new Error(nameof(entity.Email), "Email address is invalid");
-      
+
 
       yield break;
     }
