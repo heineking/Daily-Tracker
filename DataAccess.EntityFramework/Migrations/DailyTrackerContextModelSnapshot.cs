@@ -104,7 +104,7 @@ namespace DataAccess.EntityFramework.Migrations
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("BirthDate");
+                    b.Property<DateTime>("BirthDate");
 
                     b.Property<string>("Email");
 

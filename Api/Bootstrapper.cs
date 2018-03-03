@@ -31,11 +31,21 @@ using Commands.Contracts;
 using Commands.Events;
 using Commands.Validators;
 using Commands.ValidationHandlers;
+using Security.JWT;
+using Security.Contracts.JWT;
+using JWT.Algorithms;
+using JWT;
+using JWT.Serializers;
+using Nancy.Authentication.Stateless;
+using System.Security.Principal;
+using System;
+using System.Security.Claims;
+using Api.Auth;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
     private readonly IServiceCollection _services;
-    
+
     public Bootstrapper(IServiceCollection services) {
       _services = services;
     }
@@ -48,6 +58,7 @@ namespace Api {
       //base.ConfigureApplicationContainer(existingContainer);
 
       // setup our logger for the whole application
+      // TODO: move to extension?
       var logger = new LoggerConfiguration()
         .MinimumLevel.Debug()
         .Enrich.WithExceptionDetails()
@@ -62,7 +73,7 @@ namespace Api {
             .WriteTo.RollingFile("logs\\dailytracker-{Date}.log")
         )
         .CreateLogger();
-          
+
       // TODO: move this to start up?
       // create the db context options
       var configuration = new ConfigurationBuilder()
@@ -94,13 +105,26 @@ namespace Api {
         cfg.For<IHasherFactory>().Use<HasherFactory>();
         cfg.For<IHasher>().Use(ctx => ctx.GetInstance<IHasherFactory>().Create());
 
+        // register the token classes
+        cfg.For<IJWTSettings>().Use<JWTSettings>();
+        cfg.For<ITokenSettings>().Use<TokenSettings>();
+        cfg.For<IJWTService>().Use<JWTService>();
+
+        cfg.For<IJwtAlgorithm>().Use<HMACSHA256Algorithm>();
+        cfg.For<IJwtEncoder>().Use<JwtEncoder>();
+        cfg.For<IJwtDecoder>().Use<JwtDecoder>();
+        cfg.For<IDateTimeProvider>().Use<UtcDateTimeProvider>();
+        cfg.For<IJwtValidator>().Use<JwtValidator>();
+        cfg.For<IJsonSerializer>().Use<JsonNetSerializer>();
+        cfg.For<IBase64UrlEncoder>().Use<JwtBase64UrlEncoder>();
+
       });
 
     }
 
     protected override void ConfigureRequestContainer(IContainer container, NancyContext context) {
       base.ConfigureRequestContainer(container, context);
-      
+
       container.Configure(cfg => {
 
         // scan for the handlers
@@ -153,13 +177,34 @@ namespace Api {
         cfg.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => ctx.GetInstance(t));
         cfg.For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));
 
-        // validator hub
+        // jwt
+        cfg.For<ITokenGenerator>().Use<TokenGenerator>();
+
       });
-      
+
     }
 
     protected override void RequestStartup(IContainer container, IPipelines pipelines, NancyContext context) {
       base.RequestStartup(container, pipelines, context);
+      var jwtService = container.GetInstance<IJWTService>();
+
+      var configuration = new StatelessAuthenticationConfiguration(ctx => {
+        try {
+          var bearerDeclaration = "Bearer ";
+          var authHeader = ctx.Request.Headers.Authorization;
+          var jwt = authHeader.Substring(bearerDeclaration.Length);
+          var token = jwtService.DecodeToken(jwt);
+
+          if (token != null)
+            return new DailyTrackerPrincipal(token.UserId, token.Username);
+
+        } catch (Exception) {
+          return null;
+        }
+        return null;
+      });
+
+      StatelessAuthentication.Enable(pipelines, configuration);
     }
   }
 }

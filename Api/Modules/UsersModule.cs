@@ -6,6 +6,7 @@ using Infrastructure.Errors;
 using Mediator.Contracts;
 using Nancy;
 using Nancy.ModelBinding;
+using Nancy.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 namespace Api.Modules {
   public class UsersModule : NancyModule {
     public UsersModule(IHub hub, ValidatorFactory validatorFactory) : base("/Users") {
+
       Post("/", _ => {
         var createUser = this.Bind<CreateUser>();
         var validator = validatorFactory.CreateValidator<CreateUser>();
@@ -26,6 +28,7 @@ namespace Api.Modules {
             .WithStatusCode(HttpStatusCode.Accepted)
             .WithModel(new { id = createUser.UserId });
         }
+
         return Negotiate
           .WithStatusCode(HttpStatusCode.BadRequest)
           .WithModel(new { errors });

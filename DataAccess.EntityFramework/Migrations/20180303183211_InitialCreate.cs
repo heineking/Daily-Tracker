@@ -14,7 +14,7 @@ namespace DataAccess.EntityFramework.Migrations
                 {
                     UserId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    BirthDate = table.Column<string>(nullable: true),
+                    BirthDate = table.Column<DateTime>(nullable: false),
                     Email = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),

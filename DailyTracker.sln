@@ -27,9 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queries", "Queries\Queries.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commands", "Commands\Commands.csproj", "{161A2EA1-2220-420C-B160-FD3D35A09878}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Contracts", "Security.Contracts\Security.Contracts.csproj", "{4D68AB4A-83FC-432F-8E7A-D741B3171312}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security.Contracts", "Security.Contracts\Security.Contracts.csproj", "{4D68AB4A-83FC-432F-8E7A-D741B3171312}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security", "Security\Security.csproj", "{24238186-08E9-407E-AD0C-92A13D7D57B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security", "Security\Security.csproj", "{24238186-08E9-407E-AD0C-92A13D7D57B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

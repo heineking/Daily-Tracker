@@ -11,7 +11,7 @@ using System;
 namespace DataAccess.EntityFramework.Migrations
 {
     [DbContext(typeof(DailyTrackerContext))]
-    [Migration("20180223014301_InitialCreate")]
+    [Migration("20180303183211_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -105,7 +105,7 @@ namespace DataAccess.EntityFramework.Migrations
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("BirthDate");
+                    b.Property<DateTime>("BirthDate");
 
                     b.Property<string>("Email");
 

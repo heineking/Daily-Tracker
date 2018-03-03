@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Queries.Requests {
-  public class LoginUser : IRequest<Tuple<bool, string>> {
+  public class LoginUser : IRequest<Tuple<bool, string, string>> {
     public string Username { get; set; }
     public string Password { get; set; }
   }

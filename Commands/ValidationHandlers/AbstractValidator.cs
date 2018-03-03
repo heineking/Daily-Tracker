@@ -7,7 +7,7 @@ using System.Text;
 namespace Commands.ValidationHandlers
 {
   public abstract class AbstractValidator<TEntity> where TEntity : class {
-    private List<PropertyRule<TEntity>> PropertyRules;
+    public List<PropertyRule<TEntity>> PropertyRules { get; protected set; }
 
     public PropertyRule<TEntity> RuleFor<TProperty>(Expression<Func<TEntity, TProperty>> exp) {
       var rule = PropertyRule<TEntity>.Create(exp);

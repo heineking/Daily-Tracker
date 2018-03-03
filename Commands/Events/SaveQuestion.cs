@@ -8,6 +8,10 @@ namespace Commands.Events {
     public virtual int QuestionId { get; set; }
     public int QuestionnaireId { get; set; }
     public string Text { get; set; }
+    public int SavedById { get; private set; }
+    public void SetSavedById(int id) {
+      SavedById = id;
+    }
   }
 
   public class CreateQuestion : SaveQuestion, IEvent {
@@ -17,11 +21,9 @@ namespace Commands.Events {
     public void SetQuestionId(int questionId) {
       base.QuestionId = questionId;
     }
-
   }
 
   public class UpdateQuestion : SaveQuestion, IEvent {
 
   }
-
 }

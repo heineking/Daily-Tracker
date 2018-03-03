@@ -11,20 +11,21 @@ namespace Commands.Events {
     public string Name { get; set; }
     public string Description { get; set; }
     public bool Public { get; set; }
+    public int SavedById { get; protected set; }
+    public void SetSavedById(int id) {
+      SavedById = id;
+    }
   }
 
   public class UpdateQuestionnaire : SaveQuestionnaire, IEvent {
   }
 
-  public class CreateQuestionnaire : SaveQuestionnaire, IEvent, IValidatable<CreateQuestionnaire> {
-    public int UserId { get; set; }
+  public class CreateQuestionnaire : SaveQuestionnaire, IEvent {
+
     public override int QuestionnaireId { get => base.QuestionnaireId; set { /* no-op */ } }
+
     public void SetQuestionnaireId(int questionnaireId) {
       base.QuestionnaireId = questionnaireId;
-    }
-
-    public IEnumerable<Error> Validate(IValidator<CreateQuestionnaire> validator) {
-      return validator.Errors(this);
     }
   }
 }

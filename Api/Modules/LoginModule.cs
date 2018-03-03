@@ -14,13 +14,17 @@ namespace Api.Modules {
       Post("/", _ => {
         var loginInformation = this.Bind<LoginUser>();
 
-        var (isValid, updatedHash) = hub.Send(loginInformation);
+        var (isValid, token, updatedHash) = hub.Send(loginInformation);
+
+        if (!isValid)
+          return Negotiate.WithStatusCode(HttpStatusCode.BadRequest);
 
         if (!string.IsNullOrEmpty(updatedHash))
           hub.Publish(new UpdateLoginInformation { Username = loginInformation.Username, Password = updatedHash });
 
         return Negotiate
-          .WithStatusCode(isValid ? HttpStatusCode.OK : HttpStatusCode.BadRequest);
+          .WithStatusCode(HttpStatusCode.OK)
+          .WithModel(new { token });
       });
     }
   }

@@ -1,13 +1,13 @@
 ﻿using Commands.Events;
 using Commands.ValidationHandlers;
+using Mediator;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Commands.Validators
-{
-  public class CreateQuestionnaireValidator : AbstractValidator<CreateQuestionnaire> {
-    public CreateQuestionnaireValidator() {
+namespace Commands.Validators {
+  public class UpdateQuestionnaireValidator : AbstractValidator<UpdateQuestionnaire> {
+    public UpdateQuestionnaireValidator(SingleInstanceFactory singleFactory) {
 
       RuleFor(createQuestionnaire => createQuestionnaire.Name)
         .NotNull("Name cannot be null")
@@ -17,8 +17,9 @@ namespace Commands.Validators
       RuleFor(createQuestionnaire => createQuestionnaire.Description)
         .MaxLength(200, "Description cannot be longer than 200 characters");
 
-      RuleFor(createQuestionnaire => createQuestionnaire.UserId)
-        .Required("User Id is Required");
+      RuleFor(update => update.SavedById)
+        .Required("User Id is Required")
+        .MustBe((OnlySaveOwnQuestionnaireRule)singleFactory(typeof(OnlySaveOwnQuestionnaireRule)));
     }
   }
 }
