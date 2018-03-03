@@ -1,5 +1,6 @@
 ﻿using Commands.Contracts;
 using Commands.Events;
+using Commands.ValidationHandlers;
 using Commands.Validators;
 using Mediator.Contracts;
 using Nancy;
@@ -7,10 +8,11 @@ using Nancy.ModelBinding;
 using Nancy.Validation;
 using Queries.Requests;
 using System;
+using System.Linq;
 
 namespace Api.Modules {
   public class QuestionnairesModule : NancyModule {
-    public QuestionnairesModule(IHub hub, IValidatorHandler validatorHandler) : base("/questionnaires") {
+    public QuestionnairesModule(IHub hub, ValidatorFactory validatorFactory) : base("/questionnaires") {
       Get("/", _ => {
         return Negotiate
           .WithStatusCode(HttpStatusCode.OK)
@@ -19,17 +21,21 @@ namespace Api.Modules {
 
       Post("/", _ => {
         var createQuestionnaire = this.Bind<CreateQuestionnaire>();
-        var (isValid, errors) = validatorHandler.IsValid<CreateQuestionnaireValidator, CreateQuestionnaire>(createQuestionnaire);
 
-        if (!isValid)
+        var validator = validatorFactory.CreateValidator<CreateQuestionnaire>();
+        var errors = validator.Validate(createQuestionnaire).ToList();
+
+        if (!errors.Any()) {
+          hub.Publish(createQuestionnaire);
           return Negotiate
-            .WithStatusCode(HttpStatusCode.BadRequest)
-            .WithModel(new { errors });
+            .WithStatusCode(HttpStatusCode.Created)
+            .WithModel(new { id = createQuestionnaire.QuestionnaireId });
+        }
 
-        hub.Publish(createQuestionnaire);
         return Negotiate
-          .WithStatusCode(HttpStatusCode.Created)
-          .WithModel(new { id = createQuestionnaire.QuestionnaireId });
+          .WithStatusCode(HttpStatusCode.BadRequest)
+          .WithModel(new { errors });
+
       });
 
       Put("/{id:int}", _ => {

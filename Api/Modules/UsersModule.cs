@@ -1,5 +1,6 @@
 ﻿using Commands.Contracts;
 using Commands.Events;
+using Commands.ValidationHandlers;
 using Commands.Validators;
 using Infrastructure.Errors;
 using Mediator.Contracts;
@@ -12,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace Api.Modules {
   public class UsersModule : NancyModule {
-    public UsersModule(IHub hub, IValidatorHandler validatorHandler) : base("/Users") {
+    public UsersModule(IHub hub, ValidatorFactory validatorFactory) : base("/Users") {
       Post("/", _ => {
         var createUser = this.Bind<CreateUser>();
+        var validator = validatorFactory.CreateValidator<CreateUser>();
+        var errors = validator.Validate(createUser).ToList();
         
-        var (isValid, errors) = validatorHandler.IsValid<CreateUserValidator, CreateUser>(createUser);
-        
-        if (isValid) {
+        if (!errors.Any()) {
           hub.Publish(createUser);
 
           return Negotiate

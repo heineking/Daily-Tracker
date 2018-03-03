@@ -30,6 +30,7 @@ using Security;
 using Commands.Contracts;
 using Commands.Events;
 using Commands.Validators;
+using Commands.ValidationHandlers;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
@@ -109,7 +110,8 @@ namespace Api {
           scanner.WithDefaultConventions();
           scanner.AddAllTypesOf(typeof(IRequestHandler<,>));
           scanner.AddAllTypesOf(typeof(IEventHandler<>));
-          scanner.AddAllTypesOf(typeof(IValidator<>));
+          scanner.AddAllTypesOf(typeof(IRule<>));
+          scanner.AddAllTypesOf(typeof(AbstractValidator<>));
         });
 
         // start context
@@ -147,7 +149,6 @@ namespace Api {
 
         // mediator
         cfg.For<IHub>().Use<Hub>();
-        cfg.For<IValidatorHandler>().Use<ValidatorHandler>();
 
         cfg.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => ctx.GetInstance(t));
         cfg.For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));

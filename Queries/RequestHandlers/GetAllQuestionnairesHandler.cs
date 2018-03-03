@@ -10,12 +10,10 @@ using System.Linq;
 namespace Queries.RequestHandlers {
   public class GetAllQuestionnairesHandler : IRequestHandler<GetAllQuestionnaires, List<QuestionnaireModel>> {
     private readonly IRead<Questionnaire> _questionnaireReader;
-    private readonly IRead<Question> _questionReader;
     private readonly IMapper _mapper;
 
-    public GetAllQuestionnairesHandler(IRead<Questionnaire> questionnaireReader, IRead<Question> questionReader, IMapper mapper) {
+    public GetAllQuestionnairesHandler(IRead<Questionnaire> questionnaireReader, IMapper mapper) {
       _questionnaireReader = questionnaireReader;
-      _questionReader = questionReader;
       _mapper = mapper;
     }
 

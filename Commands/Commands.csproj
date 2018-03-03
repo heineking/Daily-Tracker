@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Validators\CreateQuestionnaireValidator.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DataAccess.Contracts\DataAccess.Contracts.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\Mediator\Mediator.csproj" />

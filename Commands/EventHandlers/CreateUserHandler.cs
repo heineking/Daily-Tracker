@@ -21,7 +21,7 @@ namespace Commands.EventHandlers {
 
     public void Handle(CreateUser @event) {
       var user = new User {
-        BirthDate = @event.BirthDate,
+        BirthDate = DateTime.Parse(@event.BirthDate),
         Email = @event.Email,
         FirstName = @event.FirstName,
         LastName = @event.LastName,
