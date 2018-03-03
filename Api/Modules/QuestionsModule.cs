@@ -26,7 +26,7 @@ namespace Api.Modules {
         var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
 
         var createQuestion = this.Bind<CreateQuestion>();
-        createQuestion.SetQuestionId(currentUser.UserId);
+        createQuestion.SetSavedById(currentUser.UserId);
 
         hub.Publish(createQuestion);
         return Negotiate
