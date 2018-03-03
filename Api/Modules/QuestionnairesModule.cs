@@ -29,19 +29,17 @@ namespace Api.Modules {
         createQuestionnaire.SetSavedById(currentUser.UserId);
 
         var validator = validatorFactory.CreateValidator<CreateQuestionnaire>();
-        var errors = validator.Validate(createQuestionnaire).ToList();
+        var errors = validator.Validate(createQuestionnaire);
 
-        if (!errors.Any()) {
-          hub.Publish(createQuestionnaire);
+        if (errors.Any())
           return Negotiate
-            .WithStatusCode(HttpStatusCode.Created)
-            .WithModel(new { id = createQuestionnaire.QuestionnaireId });
-        }
+            .WithStatusCode(HttpStatusCode.BadRequest)
+            .WithModel(new { errors });
 
+        hub.Publish(createQuestionnaire);
         return Negotiate
-          .WithStatusCode(HttpStatusCode.BadRequest)
-          .WithModel(new { errors });
-
+          .WithStatusCode(HttpStatusCode.Created)
+          .WithModel(new { id = createQuestionnaire.QuestionnaireId });
       });
 
       Put("/{id:int}", _ => {

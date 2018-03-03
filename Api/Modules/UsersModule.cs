@@ -19,19 +19,19 @@ namespace Api.Modules {
       Post("/", _ => {
         var createUser = this.Bind<CreateUser>();
         var validator = validatorFactory.CreateValidator<CreateUser>();
-        var errors = validator.Validate(createUser).ToList();
-        
-        if (!errors.Any()) {
-          hub.Publish(createUser);
+        var errors = validator.Validate(createUser);
 
+        if (errors.Any())
           return Negotiate
-            .WithStatusCode(HttpStatusCode.Accepted)
-            .WithModel(new { id = createUser.UserId });
-        }
+            .WithStatusCode(HttpStatusCode.BadRequest)
+            .WithModel(new { errors });
+
+        hub.Publish(createUser);
 
         return Negotiate
-          .WithStatusCode(HttpStatusCode.BadRequest)
-          .WithModel(new { errors });
+          .WithStatusCode(HttpStatusCode.Accepted)
+          .WithModel(new { id = createUser.UserId });
+
       });
     }
   }
