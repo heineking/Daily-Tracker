@@ -11,7 +11,7 @@ namespace Commands.Validators {
 
   public class CreateQuestionValidator : AbstractValidator<CreateQuestion> {
     public CreateQuestionValidator(SingleInstanceFactory singleFactory) {
-      var saveOwnQuestionnaire = 
+
       RuleFor(create => create.QuestionnaireId)
         .Required("Questionnaire Id is required");
 
