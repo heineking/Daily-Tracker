@@ -5,7 +5,7 @@ using System;
 using Infrastructure.Errors;
 
 namespace Commands.Events {
-  public class CreateUser : IEvent, IValidatable<CreateUser> {
+  public class CreateUser : IEvent {
     public int UserId { get; private set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -17,11 +17,6 @@ namespace Commands.Events {
 
     public void SetUserId(int id) {
       UserId = id;
-    }
-
-    public IEnumerable<Error> Validate(IValidator<CreateUser> validator) {
-      var brokenRules = validator.Errors(this);
-      return brokenRules;
     }
   }
 }
