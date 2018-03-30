@@ -1,4 +1,6 @@
-﻿using Mediator;
+﻿using Commands.Validators;
+using Infrastructure.Exceptions;
+using Mediator;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +12,11 @@ namespace Commands.ValidationHandlers {
       _singleInstanceFactory = singleInstanceFactory;
     }
     public AbstractValidator<TEntity> CreateValidator<TEntity>() where TEntity : class {
-      return (AbstractValidator<TEntity>)_singleInstanceFactory(typeof(AbstractValidator<TEntity>));
+      try {
+        return (AbstractValidator<TEntity>)_singleInstanceFactory(typeof(AbstractValidator<TEntity>));
+      } catch (InstanceNotFoundException ex) {
+        return new DefaultValidator<TEntity>();
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 ﻿using Api.Auth;
 using Commands.Events;
+using Commands.ValidationHandlers;
 using Mediator.Contracts;
 using Nancy;
 using Nancy.ModelBinding;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 namespace Api.Modules {
   public class QuestionsModule : NancyModule {
 
-    public QuestionsModule(IHub hub) : base("/questions") {
+    public QuestionsModule(IHub hub, ValidatorFactory validatorFactory) : base("/questions") {
       
       Get("/", _ => {
         return Negotiate
@@ -27,6 +28,14 @@ namespace Api.Modules {
 
         var createQuestion = this.Bind<CreateQuestion>();
         createQuestion.SetSavedById(currentUser.UserId);
+
+        var validator = validatorFactory.CreateValidator<CreateQuestion>();
+        var errors = validator.Validate(createQuestion);
+
+        if (errors.Any())
+          return Negotiate
+            .WithStatusCode(HttpStatusCode.BadRequest)
+            .WithModel(new { errors });
 
         hub.Publish(createQuestion);
         return Negotiate

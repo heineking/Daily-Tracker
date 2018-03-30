@@ -20,16 +20,12 @@ using DataAccess.EntityFramework.Repositories;
 using Infrastructure.Proxies;
 using Serilog;
 using Serilog.Exceptions;
-using Serilog.Formatting.Json;
 using Serilog.Filters;
 using Infrastructure.Profiling;
 using System.Diagnostics;
 using Api.Settings;
 using Security.Contracts.Hashing;
 using Security;
-using Commands.Contracts;
-using Commands.Events;
-using Commands.Validators;
 using Commands.ValidationHandlers;
 using Security.JWT;
 using Security.Contracts.JWT;
@@ -37,9 +33,8 @@ using JWT.Algorithms;
 using JWT;
 using JWT.Serializers;
 using Nancy.Authentication.Stateless;
-using System.Security.Principal;
 using System;
-using System.Security.Claims;
+using Api.Wrappers;
 using Api.Auth;
 
 namespace Api {
@@ -193,7 +188,7 @@ namespace Api {
         // mediator
         cfg.For<IHub>().Use<Hub>();
 
-        cfg.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => ctx.GetInstance(t));
+        cfg.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => FactoryMethods.Execute(() => ctx.GetInstance(t)));
         cfg.For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));
 
         // jwt
