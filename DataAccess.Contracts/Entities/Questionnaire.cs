@@ -13,5 +13,9 @@ namespace DataAccessLayer.Contracts.Entities {
 
     public ICollection<Question> Questions { get; set; }
     public User CreatedBy { get; set; }
+
+    public Questionnaire() {
+      Questions = new List<Question>();
+    }
   }
 }

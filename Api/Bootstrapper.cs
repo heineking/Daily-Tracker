@@ -52,6 +52,25 @@ namespace Api {
 
     protected override void ApplicationStartup(IContainer container, IPipelines pipelines) {
       base.ApplicationStartup(container, pipelines);
+      var jwtService = container.GetInstance<IJWTService>();
+
+      var configuration = new StatelessAuthenticationConfiguration(ctx => {
+        try {
+          var bearerDeclaration = "Bearer ";
+          var authHeader = ctx.Request.Headers.Authorization;
+          var jwt = authHeader.Substring(bearerDeclaration.Length);
+          var token = jwtService.DecodeToken(jwt);
+
+          if (token != null)
+            return new DailyTrackerPrincipal(token.UserId, token.Username);
+
+        } catch (Exception) {
+          return null;
+        }
+        return null;
+      });
+
+      StatelessAuthentication.Enable(pipelines, configuration);
     }
 
     protected override void ConfigureApplicationContainer(IContainer existingContainer) {
@@ -186,25 +205,6 @@ namespace Api {
 
     protected override void RequestStartup(IContainer container, IPipelines pipelines, NancyContext context) {
       base.RequestStartup(container, pipelines, context);
-      var jwtService = container.GetInstance<IJWTService>();
-
-      var configuration = new StatelessAuthenticationConfiguration(ctx => {
-        try {
-          var bearerDeclaration = "Bearer ";
-          var authHeader = ctx.Request.Headers.Authorization;
-          var jwt = authHeader.Substring(bearerDeclaration.Length);
-          var token = jwtService.DecodeToken(jwt);
-
-          if (token != null)
-            return new DailyTrackerPrincipal(token.UserId, token.Username);
-
-        } catch (Exception) {
-          return null;
-        }
-        return null;
-      });
-
-      StatelessAuthentication.Enable(pipelines, configuration);
     }
   }
 }

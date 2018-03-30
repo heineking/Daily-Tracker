@@ -62,6 +62,27 @@ namespace Api.Modules {
         hub.Publish(updateQuestionnaire);
         return Negotiate.WithStatusCode(HttpStatusCode.Accepted);
       });
+
+      Delete("/{id:int}", _ => {
+        this.RequiresAuthentication();
+        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
+
+        var deleteQuestionnaire = new DeleteQuestionnaire {
+          DeletedByUserId = currentUser.UserId,
+          QuestionnaireId = _.id
+        };
+
+        var validator = validatorFactory.CreateValidator<DeleteQuestionnaire>();
+        var errors = validator.Validate(deleteQuestionnaire);
+
+        if (errors.Any())
+          return Negotiate
+            .WithStatusCode(HttpStatusCode.BadRequest)
+            .WithModel(new { errors });
+
+        hub.Publish(deleteQuestionnaire);
+        return Negotiate.WithStatusCode(HttpStatusCode.Accepted);
+      });
     }
   }
 }
