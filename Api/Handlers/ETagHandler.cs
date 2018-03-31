@@ -21,6 +21,8 @@ namespace Api.Handlers
 
     public Negotiator Get<TReq, TRes>(TReq requestModel) where TReq : IRequest<TRes> {
       var response = _delegate.Get<TReq, TRes>(requestModel);
+      response.WithHeader("Cache-Control", "public, max-age=600");
+
       using (var md5Hash = MD5.Create()) {
 
         var serialized = (string)JsonConvert.SerializeObject(response.NegotiationContext.DefaultModel);
