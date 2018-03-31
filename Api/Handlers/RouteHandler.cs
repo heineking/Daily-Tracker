@@ -32,55 +32,33 @@ namespace Api.Handlers {
         _module = module;
       }
 
-      public dynamic Get<TReq, TRes>(Func<TReq> createRequestModel) where TReq : IRequest<TRes> {
-        var requestModel = createRequestModel();
+      public dynamic Get<TReq, TRes>(TReq requestModel) where TReq : IRequest<TRes> {
         return _module
           .Negotiate
           .WithStatusCode(HttpStatusCode.OK)
           .WithModel(_hub.Send(requestModel));
       }
 
-      public dynamic Post<TReq>(Func<TReq> createRequestModel, Func<TReq, object> createResponseModel) where TReq : class, IEvent {
-        var requestModel = createRequestModel();
-
-        var validator = _validatorFactory.CreateValidator<TReq>();
-        var errors = validator.Validate(requestModel);
-
-        if (errors.Any())
-          return _module
-            .Negotiate
-            .WithStatusCode(HttpStatusCode.BadRequest)
-            .WithModel(new { errors });
-
-        _hub.Publish(requestModel);
-
-        return _module
+      public dynamic Post<TReq>(TReq requestModel, Func<TReq, object> createResponseModel) where TReq : class, IEvent {
+        return Publish(requestModel) ??  _module
           .Negotiate
           .WithStatusCode(HttpStatusCode.Created)
           .WithModel(createResponseModel(requestModel));
       }
 
-      public dynamic Put<TReq>(Func<TReq> createRequestModel) where TReq : class, IEvent {
-        var requestModel = createRequestModel();
-
-        var validator = _validatorFactory.CreateValidator<TReq>();
-        var errors = validator.Validate(requestModel);
-
-        if (errors.Any())
-          return _module
-            .Negotiate
-            .WithStatusCode(HttpStatusCode.BadRequest)
-            .WithModel(new { errors });
-
-        _hub.Publish(requestModel);
-
-        return _module
+      public dynamic Put<TReq>(TReq requestModel) where TReq : class, IEvent {
+        return Publish(requestModel) ?? _module
           .Negotiate
           .WithStatusCode(HttpStatusCode.NoContent);
       }
 
-      public dynamic Delete<TReq>(Func<TReq> createRequestModel) where TReq : class, IEvent {
-        var requestModel = createRequestModel();
+      public dynamic Delete<TReq>(TReq requestModel) where TReq : class, IEvent {
+        return Publish(requestModel) ?? _module
+           .Negotiate
+           .WithStatusCode(HttpStatusCode.NoContent);
+      }
+
+      private Negotiator Publish<TReq>(TReq requestModel) where TReq : class, IEvent {
 
         var validator = _validatorFactory.CreateValidator<TReq>();
         var errors = validator.Validate(requestModel);
@@ -92,10 +70,7 @@ namespace Api.Handlers {
             .WithModel(new { errors });
 
         _hub.Publish(requestModel);
-
-        return _module
-           .Negotiate
-           .WithStatusCode(HttpStatusCode.NoContent);
+        return null;
       }
     }
   }

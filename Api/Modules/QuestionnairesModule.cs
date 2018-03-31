@@ -13,49 +13,51 @@ namespace Api.Modules {
     public QuestionnairesModule(RouteHandlerFactory routeHandlerFactory) : base("/questionnaires") {
       var handler = routeHandlerFactory.CreateRouteHandler(this);
 
-      Get("/", _ => handler.Get<GetAllQuestionnaires, List<QuestionnaireModel>>(() => new GetAllQuestionnaires());
+      Get("/", _ => handler.Get<GetAllQuestionnaires, List<QuestionnaireModel>>(new GetAllQuestionnaires()));
         
       Post("/", _ => {
         this.RequiresAuthentication();
-        return handler.Post(createRequest, createResponse);
 
-        CreateQuestionnaire createRequest() {
-          var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
-          var createQuestionnaire = this.Bind<CreateQuestionnaire>();
-          createQuestionnaire.SetSavedById(currentUser.UserId);
-          return createQuestionnaire;
-        }
+        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
 
-        object createResponse(CreateQuestionnaire createQuestionnaire) {
-          return new { id = createQuestionnaire.QuestionnaireId };
+        var createQuestionnaire = this.Bind<CreateQuestionnaire>();
+
+        createQuestionnaire.SetSavedById(currentUser.UserId);
+
+        return handler.Post(createQuestionnaire, createResponse);
+
+        object createResponse(CreateQuestionnaire created) {
+          return new { id = created.QuestionnaireId };
         }
       });
 
       Put("/{id:int}", _ => {
         this.RequiresAuthentication();
-        return handler.Put(createRequest);
 
-        UpdateQuestionnaire createRequest() {
-          var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
-          var updateQuestionnaire = this.Bind<UpdateQuestionnaire>();
-          updateQuestionnaire.QuestionnaireId = _.id;
-          updateQuestionnaire.SetSavedById(currentUser.UserId);
-          return updateQuestionnaire;
-        }
+        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
+
+        var updateQuestionnaire = this.Bind<UpdateQuestionnaire>();
+
+        updateQuestionnaire.QuestionnaireId = _.id;
+
+        updateQuestionnaire.SetSavedById(currentUser.UserId);
+
+        return handler.Put(updateQuestionnaire);
+
       });
 
       Delete("/{id:int}", _ => {
         this.RequiresAuthentication();
-        return handler.Delete(CreateRequest);
 
-        DeleteQuestionnaire CreateRequest() {
-          var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
-          var deleteQuestionnaire = new DeleteQuestionnaire {
-            DeletedByUserId = currentUser.UserId,
-            QuestionnaireId = _.id
-          };
-          return deleteQuestionnaire;
-        }
+        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
+
+        var deleteQuestionnaire = new DeleteQuestionnaire {
+          DeletedByUserId = currentUser.UserId,
+          QuestionnaireId = _.id
+        };
+
+        return handler.Delete(deleteQuestionnaire);
+
       });
     }
   }

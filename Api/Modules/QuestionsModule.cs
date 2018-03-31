@@ -14,35 +14,37 @@ namespace Api.Modules {
     public QuestionsModule(RouteHandlerFactory routeHandlerFactory) : base("/questions") {
       var handler = routeHandlerFactory.CreateRouteHandler(this);
 
-      Get("/", _ => handler.Get<GetAllQuestions, List<QuestionModel>>(() => new GetAllQuestions()));
+      Get("/", _ => handler.Get<GetAllQuestions, List<QuestionModel>>(new GetAllQuestions()));
         
       Post("/", _ => {
         this.RequiresAuthentication();
-        return handler.Post(createRequest, createResponse);
 
-        CreateQuestion createRequest() {
-          var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
-          var createQuestion = this.Bind<CreateQuestion>();
-          createQuestion.SetSavedById(currentUser.UserId);
-          return createQuestion;
-        };
+        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
 
-        object createResponse(CreateQuestion createQuestion) {
-          return new { id = createQuestion.QuestionId };
+        var createQuestion = this.Bind<CreateQuestion>();
+
+        createQuestion.SetSavedById(currentUser.UserId);
+
+        return handler.Post(createQuestion, createResponse);
+
+        object createResponse(CreateQuestion created) {
+          return new { id = created.QuestionId };
         }
       });
 
       Put("/{id:int}", _ => {
         this.RequiresAuthentication();
-        return handler.Put(createRequest);
 
-        UpdateQuestion createRequest() {
-          var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
-          var updateQuestion = this.Bind<UpdateQuestion>();
-          updateQuestion.SetSavedById(currentUser.UserId);
-          updateQuestion.QuestionId = _.id;
-          return updateQuestion;
-        }
+        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
+
+        var updateQuestion = this.Bind<UpdateQuestion>();
+
+        updateQuestion.SetSavedById(currentUser.UserId);
+
+        updateQuestion.QuestionId = _.id;
+
+        return handler.Put(updateQuestion);
+
       });
     }
   }

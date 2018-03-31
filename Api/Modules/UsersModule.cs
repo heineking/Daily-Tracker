@@ -9,15 +9,12 @@ namespace Api.Modules {
       var handler = routeHandlerFactory.CreateRouteHandler(this);
 
       Post("/", _ => {
-        return handler.Post(createRequest, createResponse);
+        var createUser = this.Bind<CreateUser>();
 
-        CreateUser createRequest() {
-          var createUser = this.Bind<CreateUser>();
-          return createUser;
-        }
+        return handler.Post(createUser, createResponse);
 
-        object createResponse(CreateUser createUser) {
-          return new { id = createUser.UserId };
+        object createResponse(CreateUser created) {
+          return new { id = created.UserId };
         }
       });
     }
