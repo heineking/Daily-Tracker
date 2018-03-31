@@ -1,87 +1,61 @@
 ﻿using Api.Auth;
-using Commands.Contracts;
+using Api.Handlers;
 using Commands.Events;
-using Commands.ValidationHandlers;
-using Commands.Validators;
-using Mediator.Contracts;
 using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Security;
-using Nancy.Validation;
+using Queries.Models;
 using Queries.Requests;
-using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Api.Modules {
   public class QuestionnairesModule : NancyModule {
-    public QuestionnairesModule(IHub hub, ValidatorFactory validatorFactory) : base("/questionnaires") {
-      Get("/", _ => {
-        return Negotiate
-          .WithStatusCode(HttpStatusCode.OK)
-          .WithModel(hub.Send(new GetAllQuestionnaires()));
-      });
+    public QuestionnairesModule(RouteHandlerFactory routeHandlerFactory) : base("/questionnaires") {
+      var handler = routeHandlerFactory.CreateRouteHandler(this);
 
+      Get("/", _ => handler.Get<GetAllQuestionnaires, List<QuestionnaireModel>>(() => new GetAllQuestionnaires());
+        
       Post("/", _ => {
         this.RequiresAuthentication();
-        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
+        return handler.Post(createRequest, createResponse);
 
-        var createQuestionnaire = this.Bind<CreateQuestionnaire>();
-        createQuestionnaire.SetSavedById(currentUser.UserId);
+        CreateQuestionnaire createRequest() {
+          var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
+          var createQuestionnaire = this.Bind<CreateQuestionnaire>();
+          createQuestionnaire.SetSavedById(currentUser.UserId);
+          return createQuestionnaire;
+        }
 
-        var validator = validatorFactory.CreateValidator<CreateQuestionnaire>();
-        var errors = validator.Validate(createQuestionnaire);
-
-        if (errors.Any())
-          return Negotiate
-            .WithStatusCode(HttpStatusCode.BadRequest)
-            .WithModel(new { errors });
-
-        hub.Publish(createQuestionnaire);
-        return Negotiate
-          .WithStatusCode(HttpStatusCode.Created)
-          .WithModel(new { id = createQuestionnaire.QuestionnaireId });
+        object createResponse(CreateQuestionnaire createQuestionnaire) {
+          return new { id = createQuestionnaire.QuestionnaireId };
+        }
       });
 
       Put("/{id:int}", _ => {
         this.RequiresAuthentication();
-        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
+        return handler.Put(createRequest);
 
-        var updateQuestionnaire = this.Bind<UpdateQuestionnaire>();
-        updateQuestionnaire.QuestionnaireId = _.id;
-        updateQuestionnaire.SetSavedById(currentUser.UserId);
-
-        var validator = validatorFactory.CreateValidator<UpdateQuestionnaire>();
-        var errors = validator.Validate(updateQuestionnaire);
-
-        if (errors.Any())
-          return Negotiate
-            .WithStatusCode(HttpStatusCode.BadRequest)
-            .WithModel(new { errors });
-
-        updateQuestionnaire.QuestionnaireId = _.id;
-        hub.Publish(updateQuestionnaire);
-        return Negotiate.WithStatusCode(HttpStatusCode.Accepted);
+        UpdateQuestionnaire createRequest() {
+          var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
+          var updateQuestionnaire = this.Bind<UpdateQuestionnaire>();
+          updateQuestionnaire.QuestionnaireId = _.id;
+          updateQuestionnaire.SetSavedById(currentUser.UserId);
+          return updateQuestionnaire;
+        }
       });
 
       Delete("/{id:int}", _ => {
         this.RequiresAuthentication();
-        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
+        return handler.Delete(CreateRequest);
 
-        var deleteQuestionnaire = new DeleteQuestionnaire {
-          DeletedByUserId = currentUser.UserId,
-          QuestionnaireId = _.id
-        };
-
-        var validator = validatorFactory.CreateValidator<DeleteQuestionnaire>();
-        var errors = validator.Validate(deleteQuestionnaire);
-
-        if (errors.Any())
-          return Negotiate
-            .WithStatusCode(HttpStatusCode.BadRequest)
-            .WithModel(new { errors });
-
-        hub.Publish(deleteQuestionnaire);
-        return Negotiate.WithStatusCode(HttpStatusCode.Accepted);
+        DeleteQuestionnaire CreateRequest() {
+          var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
+          var deleteQuestionnaire = new DeleteQuestionnaire {
+            DeletedByUserId = currentUser.UserId,
+            QuestionnaireId = _.id
+          };
+          return deleteQuestionnaire;
+        }
       });
     }
   }

@@ -121,7 +121,7 @@ namespace Commands.ValidationHandlers {
       var str = (string)maybeString;
       if (!string.IsNullOrEmpty(str))
         return action(str);
-      return false;
+      return true;
     }
   }
 }

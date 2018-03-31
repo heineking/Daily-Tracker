@@ -1,37 +1,24 @@
-﻿using Commands.Contracts;
+﻿using Api.Handlers;
 using Commands.Events;
-using Commands.ValidationHandlers;
-using Commands.Validators;
-using Infrastructure.Errors;
-using Mediator.Contracts;
 using Nancy;
 using Nancy.ModelBinding;
-using Nancy.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Api.Modules {
   public class UsersModule : NancyModule {
-    public UsersModule(IHub hub, ValidatorFactory validatorFactory) : base("/Users") {
+    public UsersModule(RouteHandlerFactory routeHandlerFactory) : base("/Users") {
+      var handler = routeHandlerFactory.CreateRouteHandler(this);
 
       Post("/", _ => {
-        var createUser = this.Bind<CreateUser>();
-        var validator = validatorFactory.CreateValidator<CreateUser>();
-        var errors = validator.Validate(createUser);
+        return handler.Post(createRequest, createResponse);
 
-        if (errors.Any())
-          return Negotiate
-            .WithStatusCode(HttpStatusCode.BadRequest)
-            .WithModel(new { errors });
+        CreateUser createRequest() {
+          var createUser = this.Bind<CreateUser>();
+          return createUser;
+        }
 
-        hub.Publish(createUser);
-
-        return Negotiate
-          .WithStatusCode(HttpStatusCode.Accepted)
-          .WithModel(new { id = createUser.UserId });
-
+        object createResponse(CreateUser createUser) {
+          return new { id = createUser.UserId };
+        }
       });
     }
   }

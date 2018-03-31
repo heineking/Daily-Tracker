@@ -8,22 +8,21 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Commands.Validators {
+  public class CreateQuestionValidator : AbstractValidator<CreateQuestion> {
+    public CreateQuestionValidator(SingleInstanceFactory singleFactory) {
 
-  //public class CreateQuestionValidator : AbstractValidator<CreateQuestion> {
-  //  public CreateQuestionValidator(SingleInstanceFactory singleFactory) {
+      RuleFor(create => create.QuestionnaireId)
+        .Required("Questionnaire Id is required");
 
-  //    RuleFor(create => create.QuestionnaireId)
-  //      .Required("Questionnaire Id is required");
+      RuleFor(create => create.SavedById)
+        .Required("Saved By Id is required")
+        .MustBe((CanOnlySaveQuestionsOnOwnQuestionnaire)singleFactory(typeof(CanOnlySaveQuestionsOnOwnQuestionnaire)));
 
-  //    RuleFor(create => create.SavedById)
-  //      .Required("Saved By Id is required")
-  //      .MustBe((CanOnlySaveQuestionsOnOwnQuestionnaire)singleFactory(typeof(CanOnlySaveQuestionsOnOwnQuestionnaire)));
+      RuleFor(create => create.Text)
+        .NotNull("Text cannot be null")
+        .NotEmpty("Text cannot by empty")
+        .MaxLength(200, "Text cannot be longer than 200 characters");
 
-  //    RuleFor(create => create.Text)
-  //      .NotNull("Text cannot be null")
-  //      .NotEmpty("Text cannot by empty")
-  //      .MaxLength(200, "Text cannot be longer than 200 characters");
-
-  //  }
-  //}
+    }
+  }
 }

@@ -36,6 +36,7 @@ using Nancy.Authentication.Stateless;
 using System;
 using Api.Wrappers;
 using Api.Auth;
+using Api.Handlers;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
@@ -158,9 +159,9 @@ namespace Api {
         // strategies
         cfg.For<IEntityPredicate>().Use<EntityPredicate>();
 
+        // register repos
         var loggerProxyFactory = container.GetInstance<LoggerProxyFactory>();
         var timerProxyFactory = container.GetInstance<TimerProxyFactory>();
-        // register repos
 
         // questionnaires
         cfg.For<IRead<Questionnaire>>().Use<QuestionnaireRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
@@ -187,6 +188,9 @@ namespace Api {
 
         // mediator
         cfg.For<IHub>().Use<Hub>();
+
+        // route handling
+        cfg.For<RouteHandlerFactory>().Use<RouteHandlerFactory>();
 
         cfg.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => FactoryMethods.Execute(() => ctx.GetInstance(t)));
         cfg.For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));
