@@ -37,6 +37,7 @@ using System;
 using Api.Wrappers;
 using Api.Auth;
 using Api.Handlers;
+using Infrastructure.Hashing;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
@@ -135,6 +136,7 @@ namespace Api {
 
       });
 
+
     }
 
     protected override void ConfigureRequestContainer(IContainer container, NancyContext context) {
@@ -158,6 +160,9 @@ namespace Api {
 
         // strategies
         cfg.For<IEntityPredicate>().Use<EntityPredicate>();
+
+        // hasher
+        cfg.For<IHash>().Use<MD5HashAdapter>();
 
         // register repos
         var loggerProxyFactory = container.GetInstance<LoggerProxyFactory>();

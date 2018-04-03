@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <Folder Include="logs\" />
+    <Folder Include="Caching\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
