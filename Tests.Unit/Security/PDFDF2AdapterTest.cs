@@ -18,13 +18,13 @@ namespace Tests.Unit.Security {
 
       public int HashBytes => 32;
 
-      public HashAlgorithm Algorithm => HashAlgorithm.PDKDF2;
+      public HashAlgorithm Algorithm => HashAlgorithm.PBKDF2;
     }
     [TestMethod]
     public void Should_Generate_A_New_Hash_Each_Time_CreatePassword_Is_Passed_Text() {
       // arrange
       var text = "abc";
-      var hasher = new PDKDF2Adapter(new HashSettings());
+      var hasher = new PBKDF2Adapter(new HashSettings());
       var pswd1 = hasher.CreatePassword(text);
       var pswd2 = hasher.CreatePassword(text);
 
@@ -41,7 +41,7 @@ namespace Tests.Unit.Security {
     public void Should_Return_Equal_Passwords_When_Passed_Hash_And_Salt_From_Original_Password() {
       // arrange
       var text = "abc";
-      var hasher = new PDKDF2Adapter(new HashSettings());
+      var hasher = new PBKDF2Adapter(new HashSettings());
       var pswd = hasher.CreatePassword(text);
       var pswd2 = hasher.CreatePassword(text, pswd.Salt.ToArray(), pswd.Hash.Count, pswd.Iterations);
 

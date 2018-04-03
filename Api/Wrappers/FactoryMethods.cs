@@ -10,7 +10,7 @@ namespace Api.Wrappers {
     public static object Execute(Func<object> findService) {
       try {
         return findService();
-      } catch (StructureMapConfigurationException ex) {
+      } catch (StructureMapConfigurationException) {
         throw new InstanceNotFoundException();
       }
     }

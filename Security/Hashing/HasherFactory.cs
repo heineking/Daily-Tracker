@@ -13,8 +13,8 @@ namespace Security {
       // TODO: not really happy with this switch statement...
       // refactor?
       switch (algorithm) {
-        case HashAlgorithm.PDKDF2:
-          return new PDKDF2Adapter(_settings);
+        case HashAlgorithm.PBKDF2:
+          return new PBKDF2Adapter(_settings);
         default:
           throw new NotImplementedException($"Factory not implemented to handle this HashAlgorithm type = {algorithm}");
       }

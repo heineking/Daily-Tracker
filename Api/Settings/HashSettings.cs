@@ -13,6 +13,6 @@ namespace Api.Settings
 
     public int HashBytes => 32;
 
-    public HashAlgorithm Algorithm => HashAlgorithm.PDKDF2;
+    public HashAlgorithm Algorithm => HashAlgorithm.PBKDF2;
   }
 }

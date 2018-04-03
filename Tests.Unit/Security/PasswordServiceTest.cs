@@ -31,7 +31,7 @@ namespace Tests.Unit.Security {
     public void Should_Return_True_If_Passed_String_That_Equals_Existing_Password() {
       // arrange
       var passwordPlainText = "p@$$w0rd1";
-      var hasherFactory = new HasherFactory(new HashSettings(100, 32, 32, HashAlgorithm.PDKDF2));
+      var hasherFactory = new HasherFactory(new HashSettings(100, 32, 32, HashAlgorithm.PBKDF2));
       var hasher = hasherFactory.Create();
       var password = hasher.CreatePassword(passwordPlainText);
       var passwordService = new PasswordService(hasherFactory);
@@ -47,7 +47,7 @@ namespace Tests.Unit.Security {
     public void Should_Return_False_If_Passed_String_That_Does_Not_Equal_Existing_Password() {
       // arrange
       var passwordPlainText = "p@$$w0rd1";
-      var hasherFactory = new HasherFactory(new HashSettings(100, 32, 32, HashAlgorithm.PDKDF2));
+      var hasherFactory = new HasherFactory(new HashSettings(100, 32, 32, HashAlgorithm.PBKDF2));
       var hasher = hasherFactory.Create();
       var password = hasher.CreatePassword(passwordPlainText);
       var passwordService = new PasswordService(hasherFactory);
@@ -63,12 +63,12 @@ namespace Tests.Unit.Security {
     public void Should_Output_New_Password_Hash_If_Settings_Have_Changed_Since_Original_Was_Generated() {
       // arrange
       var passwordPlainText = "p@$$w0rd1";
-      var hasherFactory = new HasherFactory(new HashSettings(100, 32, 32, HashAlgorithm.PDKDF2));
+      var hasherFactory = new HasherFactory(new HashSettings(100, 32, 32, HashAlgorithm.PBKDF2));
       var hasher = hasherFactory.Create();
       var password = hasher.CreatePassword(passwordPlainText);
       var passwordService = new PasswordService(hasherFactory);
 
-      var hashFactoryWithupdatedSettings = new HasherFactory(new HashSettings(1000, 8, 24, HashAlgorithm.PDKDF2));
+      var hashFactoryWithupdatedSettings = new HasherFactory(new HashSettings(1000, 8, 24, HashAlgorithm.PBKDF2));
       var passwordServiceUpdated = new PasswordService(hashFactoryWithupdatedSettings);
 
       // act
@@ -84,7 +84,7 @@ namespace Tests.Unit.Security {
     public void Should_Not_Output_New_Password_Hash_If_Settings_Have_Not_Changed() {
       // arrange
       var passwordPlainText = "p@$$w0rd1";
-      var hasherFactory = new HasherFactory(new HashSettings(100, 32, 32, HashAlgorithm.PDKDF2));
+      var hasherFactory = new HasherFactory(new HashSettings(100, 32, 32, HashAlgorithm.PBKDF2));
       var hasher = hasherFactory.Create();
       var password = hasher.CreatePassword(passwordPlainText);
       var passwordService = new PasswordService(hasherFactory);

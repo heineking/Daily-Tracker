@@ -11,7 +11,7 @@ namespace Security.Contracts.Hashing {
   }
 
   public enum HashAlgorithm {
-    PDKDF2
+    PBKDF2
   }
 
   public interface IHashSettings {

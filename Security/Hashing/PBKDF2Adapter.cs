@@ -4,23 +4,23 @@ using Security.Contracts;
 using System.Security.Cryptography;
 
 namespace Security {
-  public class PDKDF2Adapter : IHasher {
+  public class PBKDF2Adapter : IHasher {
 
     private readonly IHashSettings _settings;
 
-    public PDKDF2Adapter(IHashSettings settings) {
+    public PBKDF2Adapter(IHashSettings settings) {
       _settings = settings;
     }
 
     public Password CreatePassword(string text, byte[] salt, int hashBytes, int iterations) {
       var hash = GetBytes(text, salt, hashBytes, iterations);
-      return new Password(hash, salt, iterations, Contracts.Hashing.HashAlgorithm.PDKDF2);
+      return new Password(hash, salt, iterations, Contracts.Hashing.HashAlgorithm.PBKDF2);
     }
 
     public Password CreatePassword(string text) {
       var salt = Salt();
       var hash = GetBytes(text, salt, _settings.HashBytes, _settings.Iterations);
-      return new Password(hash, salt, _settings.Iterations, Contracts.Hashing.HashAlgorithm.PDKDF2);
+      return new Password(hash, salt, _settings.Iterations, Contracts.Hashing.HashAlgorithm.PBKDF2);
     }
 
     private byte[] GetBytes(string text, byte[] salt, int hashBytes, int iterations) {

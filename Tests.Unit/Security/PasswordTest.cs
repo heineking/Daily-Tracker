@@ -19,7 +19,7 @@ namespace Tests.Unit.Security {
       var password = new Password(str);
 
       // assert
-      password.Algorithm.ShouldBe(HashAlgorithm.PDKDF2);
+      password.Algorithm.ShouldBe(HashAlgorithm.PBKDF2);
       password.Iterations.ShouldBe(10000);
       password.Hash.ShouldBe(Convert.FromBase64String("abcd"));
       password.Salt.ShouldBe(Convert.FromBase64String("efgh"));
