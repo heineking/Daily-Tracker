@@ -29,7 +29,7 @@ namespace Commands.EventHandlers {
 
       _hub.Publish(new Commit());
 
-      @event.SetQuestionnaireId(questionnaire.QuestionnaireId);
+      @event.QuestionnaireId = questionnaire.QuestionnaireId;
     }
   }
 }

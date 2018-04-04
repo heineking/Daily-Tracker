@@ -14,7 +14,7 @@ namespace Commands.ValidationHandlers {
     public AbstractValidator<TEntity> CreateValidator<TEntity>() where TEntity : class {
       try {
         return (AbstractValidator<TEntity>)_singleInstanceFactory(typeof(AbstractValidator<TEntity>));
-      } catch (InstanceNotFoundException ex) {
+      } catch (InstanceNotFoundException) {
         return new DefaultValidator<TEntity>();
       }
     }

@@ -21,8 +21,8 @@ namespace Api.Modules {
         var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
 
         var createQuestionnaire = this.Bind<CreateQuestionnaire>();
-
-        createQuestionnaire.SetSavedById(currentUser.UserId);
+        createQuestionnaire.QuestionnaireId = default(int);
+        createQuestionnaire.SavedById = currentUser.UserId;
 
         return handler.Post(createQuestionnaire, createResponse);
 
@@ -39,8 +39,7 @@ namespace Api.Modules {
         var updateQuestionnaire = this.Bind<UpdateQuestionnaire>();
 
         updateQuestionnaire.QuestionnaireId = _.id;
-
-        updateQuestionnaire.SetSavedById(currentUser.UserId);
+        updateQuestionnaire.SavedById = currentUser.UserId;
 
         return handler.Put(updateQuestionnaire);
 
