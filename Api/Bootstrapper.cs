@@ -38,6 +38,7 @@ using Api.Wrappers;
 using Api.Auth;
 using Api.Handlers;
 using Infrastructure.Hashing;
+using Mediator.Caching;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
@@ -108,6 +109,9 @@ namespace Api {
         // register the db context options
         cfg.For<DbContextOptions>().Use(builder.Options);
 
+        // register our in-memory cache
+        cfg.For<Cache>().Use<Cache>().Singleton();
+
         // register our serilog provider
         cfg.For<ILogger>().Use(logger);
         cfg.For<IStopwatch>().Use(ctx => new StopwatchAdapter(new Stopwatch()));
@@ -115,6 +119,7 @@ namespace Api {
         // register our proxy factories
         cfg.For<LoggerProxyFactory>().Use<LoggerProxyFactory>();
         cfg.For<TimerProxyFactory>().Use<TimerProxyFactory>();
+        cfg.For<CacheProxyFactory>().Use<CacheProxyFactory>();
 
         // register hashing classes
         cfg.For<IHashSettings>().Use<HashSettings>();
@@ -197,7 +202,9 @@ namespace Api {
         // route handling
         cfg.For<RouteHandlerFactory>().Use<RouteHandlerFactory>();
 
-        cfg.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => FactoryMethods.Execute(() => ctx.GetInstance(t)));
+        var cacheProxyFactory = container.GetInstance<CacheProxyFactory>();
+
+        cfg.For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => cacheProxyFactory.Create(FactoryMethods.Execute(() => ctx.GetInstance(t))));
         cfg.For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));
 
         // jwt
