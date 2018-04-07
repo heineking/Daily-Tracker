@@ -103,15 +103,23 @@ namespace Api {
       builder.UseSqlite(connectionString);
 
       existingContainer.Configure(cfg => {
-        // transfer over the startup services
+        // transfer over the startup services for nancy DI to use
         cfg.Populate(_services);
+
+        // scan for the handlers
+        cfg.Scan(scanner => {
+          scanner.Assembly("Commands");
+          scanner.Assembly("Queries");
+          scanner.WithDefaultConventions();
+          scanner.AddAllTypesOf(typeof(IRequestHandler<,>));
+          scanner.AddAllTypesOf(typeof(IEventHandler<>));
+          scanner.AddAllTypesOf(typeof(IRule<>));
+          scanner.AddAllTypesOf(typeof(AbstractValidator<>));
+        });
 
         // register the db context options
         cfg.For<DbContextOptions>().Use(builder.Options);
-
-        // register our in-memory cache
-        cfg.For<Cache>().Use<Cache>().Singleton();
-
+        
         // register our serilog provider
         cfg.For<ILogger>().Use(logger);
         cfg.For<IStopwatch>().Use(ctx => new StopwatchAdapter(new Stopwatch()));
@@ -149,16 +157,7 @@ namespace Api {
 
       container.Configure(cfg => {
 
-        // scan for the handlers
-        cfg.Scan(scanner => {
-          scanner.Assembly("Commands");
-          scanner.Assembly("Queries");
-          scanner.WithDefaultConventions();
-          scanner.AddAllTypesOf(typeof(IRequestHandler<,>));
-          scanner.AddAllTypesOf(typeof(IEventHandler<>));
-          scanner.AddAllTypesOf(typeof(IRule<>));
-          scanner.AddAllTypesOf(typeof(AbstractValidator<>));
-        });
+
 
         // start context
         cfg.For<DbContext>().Use<DailyTrackerContext>();

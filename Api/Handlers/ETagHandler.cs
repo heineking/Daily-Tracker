@@ -5,8 +5,6 @@ using Mediator.Contracts;
 using Nancy.Responses.Negotiation;
 using Nancy;
 using Newtonsoft.Json;
-using System.Text;
-using System.Security.Cryptography;
 using Infrastructure.Hashing;
 
 namespace Api.Handlers {
