@@ -38,7 +38,7 @@ using Api.Wrappers;
 using Api.Auth;
 using Api.Handlers;
 using Infrastructure.Hashing;
-using Mediator.Caching;
+using Queries.Caching;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {

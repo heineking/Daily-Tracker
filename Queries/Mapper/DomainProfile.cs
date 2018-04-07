@@ -4,7 +4,7 @@ using DataAccessLayer.Contracts.Entities;
 using Queries.Models;
 using System.Linq;
 
-namespace Infrastructure.Mapper {
+namespace Queries.Mapper {
   public class DomainProfile : Profile {
     public DomainProfile() {
       // TODO: there must be a generic way to map $entityNameId == Id

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Mediator.Caching {
+namespace Infrastructure.Caching {
   // TODO: I wonder if this would be better off in a different project? Maybe the Infrastructure project?
   public class CacheProxy<T> : DispatchProxy {
     private IMemoryCache _cache;

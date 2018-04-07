@@ -4,8 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nancy.Owin;
 using AutoMapper;
-using Infrastructure.Mapper;
 using System.Reflection;
+using Queries.Mapper;
 
 namespace Api {
   public class Startup {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mediator.Caching {
+namespace Infrastructure.Caching {
   public enum CacheType {
     Absolute
   }

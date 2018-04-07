@@ -1,10 +1,11 @@
-﻿using Mediator.Contracts;
+﻿using Infrastructure.Caching;
+using Mediator.Contracts;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Mediator.Caching {
+namespace Queries.Caching {
 
   public abstract class ProxyFactoryWrapper<TRequest, TResponse> where TRequest : IRequest<TResponse> {
     public abstract IRequestHandler<TRequest, TResponse> Create(IRequestHandler<TRequest, TResponse> implementation, IMemoryCache cache, uint cacheForSeconds, CacheType cacheType);

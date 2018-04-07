@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DataAccess.Contracts.Repositories;
 using DataAccessLayer.Contracts.Entities;
-using Mediator.Caching;
+using Infrastructure.Caching;
 using Mediator.Contracts;
 using Queries.Models;
 using Queries.Requests;
