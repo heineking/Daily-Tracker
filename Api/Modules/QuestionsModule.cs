@@ -23,7 +23,7 @@ namespace Api.Modules {
 
         var createQuestion = this.Bind<CreateQuestion>();
 
-        createQuestion.SetSavedById(currentUser.UserId);
+        createQuestion.SavedById = currentUser.UserId;
 
         return handler.Post(createQuestion, createResponse);
 
@@ -39,7 +39,7 @@ namespace Api.Modules {
 
         var updateQuestion = this.Bind<UpdateQuestion>();
 
-        updateQuestion.SetSavedById(currentUser.UserId);
+        updateQuestion.SavedById = currentUser.UserId;
 
         updateQuestion.QuestionId = _.id;
 

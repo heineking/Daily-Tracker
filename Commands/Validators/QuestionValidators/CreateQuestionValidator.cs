@@ -11,6 +11,9 @@ namespace Commands.Validators {
   public class CreateQuestionValidator : AbstractValidator<CreateQuestion> {
     public CreateQuestionValidator(SingleInstanceFactory singleFactory) {
 
+      RuleFor(create => create.QuestionId)
+        .MustBe((questionId) => (int)questionId == default(int), "Question Id must be unset");
+
       RuleFor(create => create.QuestionnaireId)
         .Required("Questionnaire Id is required");
 

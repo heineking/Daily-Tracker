@@ -9,6 +9,9 @@ namespace Commands.Validators {
   public class UpdateQuestionnaireValidator : AbstractValidator<UpdateQuestionnaire> {
     public UpdateQuestionnaireValidator(SingleInstanceFactory singleFactory) {
 
+      RuleFor(update => update.QuestionnaireId)
+        .Required("Questionnaire Id is required");
+
       RuleFor(createQuestionnaire => createQuestionnaire.Name)
         .NotNull("Name cannot be null")
         .NotEmpty("Name cannot be empty")

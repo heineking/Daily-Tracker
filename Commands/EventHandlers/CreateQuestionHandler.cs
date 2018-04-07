@@ -24,7 +24,8 @@ namespace Commands.EventHandlers {
 
       _questionSaver.Save(question);
       _hub.Publish(new Commit());
-      @event.SetQuestionId(question.QuestionId);
+
+      @event.QuestionId = question.QuestionId;
     }
   }
 }
