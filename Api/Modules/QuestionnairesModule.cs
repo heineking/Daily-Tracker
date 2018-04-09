@@ -9,7 +9,7 @@ using Queries.Requests;
 using System.Collections.Generic;
 
 namespace Api.Modules {
-  public class QuestionnairesModule : NancyModule {
+  public class QuestionnairesModule : BaseModule {
     public QuestionnairesModule(RouteHandlerFactory routeHandlerFactory) : base("/questionnaires") {
       var handler = routeHandlerFactory.CreateRouteHandler(this);
 
@@ -17,12 +17,9 @@ namespace Api.Modules {
         
       Post("/", _ => {
         this.RequiresAuthentication();
-
-        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
-
+        
         var createQuestionnaire = this.Bind<CreateQuestionnaire>();
-        createQuestionnaire.QuestionnaireId = default(int);
-        createQuestionnaire.SavedById = currentUser.UserId;
+        createQuestionnaire.SavedById = User.UserId;
 
         return handler.Post(createQuestionnaire, createResponse);
 
@@ -33,13 +30,10 @@ namespace Api.Modules {
 
       Put("/{id:int}", _ => {
         this.RequiresAuthentication();
-
-        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
-
         var updateQuestionnaire = this.Bind<UpdateQuestionnaire>();
 
         updateQuestionnaire.QuestionnaireId = _.id;
-        updateQuestionnaire.SavedById = currentUser.UserId;
+        updateQuestionnaire.SavedById = User.UserId;
 
         return handler.Put(updateQuestionnaire);
 
@@ -47,11 +41,9 @@ namespace Api.Modules {
 
       Delete("/{id:int}", _ => {
         this.RequiresAuthentication();
-
-        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
-
+        
         var deleteQuestionnaire = new DeleteQuestionnaire {
-          DeletedByUserId = currentUser.UserId,
+          DeletedByUserId = User.UserId,
           QuestionnaireId = _.id
         };
 

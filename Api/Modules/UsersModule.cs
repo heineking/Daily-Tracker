@@ -4,7 +4,7 @@ using Nancy;
 using Nancy.ModelBinding;
 
 namespace Api.Modules {
-  public class UsersModule : NancyModule {
+  public class UsersModule : BaseModule {
     public UsersModule(RouteHandlerFactory routeHandlerFactory) : base("/Users") {
       var handler = routeHandlerFactory.CreateRouteHandler(this);
 

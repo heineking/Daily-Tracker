@@ -9,6 +9,10 @@ namespace Commands.Validators
 
   public class CreateQuestionnaireValidator : AbstractValidator<CreateQuestionnaire> {
     public CreateQuestionnaireValidator() {
+
+      RuleFor(createQuestionnaire => createQuestionnaire.QuestionnaireId)
+        .MustBe((questionnaireId) => (int)questionnaireId == default(int), "Questionnaire Id must be unset");
+
       RuleFor(createQuestionnaire => createQuestionnaire.Name)
         .NotNull("Name cannot be null")
         .NotEmpty("Name cannot be empty")

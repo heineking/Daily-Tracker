@@ -8,17 +8,18 @@ using System.Text.RegularExpressions;
 namespace Commands.ValidationHandlers {
   public class PropertyRule<TEntity> where TEntity : class {
     private List<IRule<TEntity>> Rules;
-
     private Func<TEntity, object> PropertySelector;
+    private Type PropertyType;
 
-    private PropertyRule(Func<TEntity, object> propertySelector) {
+    private PropertyRule(Func<TEntity, object> propertySelector, Type propertyType) {
       PropertySelector = propertySelector;
+      PropertyType = propertyType;
       Rules = new List<IRule<TEntity>>();
     }
 
     public static PropertyRule<T> Create<T, TProperty>(Expression<Func<T, TProperty>> exp) where T : class {
       Func<T, object> propertySelector = x => exp.Compile()(x);
-      return new PropertyRule<T>(propertySelector);
+      return new PropertyRule<T>(propertySelector, typeof(TProperty));
     }
 
     public Tuple<bool, string> Validate(TEntity entity) {
@@ -39,6 +40,16 @@ namespace Commands.ValidationHandlers {
       var rule = new Rule<TEntity> {
         Message = message,
         IsValid = entity => (string)PropertySelector(entity) != String.Empty
+      };
+      Rules.Add(rule);
+      return this;
+    }
+
+    public PropertyRule<TEntity> MustBeDefault(string message) {
+      var defaultValue = PropertyType.IsValueType ? Activator.CreateInstance(PropertyType) : null;
+      var rule = new Rule<TEntity> {
+        Message = message,
+        IsValid = entity => PropertySelector(entity).Equals(defaultValue)
       };
       Rules.Add(rule);
       return this;
@@ -86,11 +97,12 @@ namespace Commands.ValidationHandlers {
     }
 
     public PropertyRule<TEntity> Required(string message) {
+      var defaultValue = Activator.CreateInstance(PropertyType);
       var rule = new Rule<TEntity> {
         Message = message,
         IsValid = entity => {
           var propertyValue = PropertySelector(entity);
-          return !(propertyValue == null || propertyValue == Activator.CreateInstance(propertyValue.GetType()));
+          return !(propertyValue == null || defaultValue.Equals(propertyValue));
         }
       };
       Rules.Add(rule);
@@ -99,6 +111,11 @@ namespace Commands.ValidationHandlers {
 
     public PropertyRule<TEntity> MustBe<TRule>(TRule rule) where TRule : IRule<TEntity> {
       Rules.Add(rule);
+      return this;
+    }
+
+    public PropertyRule<TEntity> MustBe(object rule) {
+      Rules.Add((IRule<TEntity>)rule);
       return this;
     }
 

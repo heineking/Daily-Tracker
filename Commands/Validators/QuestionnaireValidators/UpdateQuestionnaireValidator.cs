@@ -22,7 +22,7 @@ namespace Commands.Validators {
 
       RuleFor(update => update.SavedById)
         .Required("User Id is Required")
-        .MustBe((OnlySaveOwnQuestionnaireRule)singleFactory(typeof(OnlySaveOwnQuestionnaireRule)));
+        .MustBe(singleFactory(typeof(OnlySaveOwnQuestionnaireRule)));
     }
   }
 }

@@ -9,7 +9,7 @@ using Queries.Requests;
 using System.Collections.Generic;
 
 namespace Api.Modules {
-  public class QuestionsModule : NancyModule {
+  public class QuestionsModule : BaseModule {
 
     public QuestionsModule(RouteHandlerFactory routeHandlerFactory) : base("/questions") {
       var handler = routeHandlerFactory.CreateRouteHandler(this);
@@ -18,12 +18,10 @@ namespace Api.Modules {
         
       Post("/", _ => {
         this.RequiresAuthentication();
-
-        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
-
+        
         var createQuestion = this.Bind<CreateQuestion>();
 
-        createQuestion.SavedById = currentUser.UserId;
+        createQuestion.SavedById = User.UserId;
 
         return handler.Post(createQuestion, createResponse);
 
@@ -35,11 +33,9 @@ namespace Api.Modules {
       Put("/{id:int}", _ => {
         this.RequiresAuthentication();
 
-        var currentUser = (DailyTrackerPrincipal)Context.CurrentUser;
-
         var updateQuestion = this.Bind<UpdateQuestion>();
 
-        updateQuestion.SavedById = currentUser.UserId;
+        updateQuestion.SavedById = User.UserId;
 
         updateQuestion.QuestionId = _.id;
 

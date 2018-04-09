@@ -11,11 +11,11 @@ namespace Commands.Validators.QuestionnaireValidators {
 
       RuleFor(request => request.DeletedByUserId)
         .Required("User Id is required")
-        .MustBe((DeleteOwnQuestionnaireRule)singleFactory(typeof(DeleteOwnQuestionnaireRule)));
+        .MustBe(singleFactory(typeof(DeleteOwnQuestionnaireRule)));
 
       RuleFor(request => request.QuestionnaireId)
         .Required("Questionnaire Id is required")
-        .MustBe((QuestionnaireExistsRule)singleFactory(typeof(QuestionnaireExistsRule)));
+        .MustBe(singleFactory(typeof(QuestionnaireExistsRule)));
     }
   }
 }

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Api.Modules {
-  public class LoginModule : NancyModule {
+  public class LoginModule : BaseModule {
     public LoginModule(IHub hub) : base("/Login") {
       Post("/", _ => {
         var loginInformation = this.Bind<LoginUser>();

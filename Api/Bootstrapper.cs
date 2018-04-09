@@ -39,6 +39,8 @@ using Api.Auth;
 using Api.Handlers;
 using Infrastructure.Hashing;
 using Queries.Caching;
+using Commands.Events;
+using Commands.Validators.OptionValidators;
 
 namespace Api {
   public class Bootstrapper : StructureMapNancyBootstrapper {
@@ -52,6 +54,7 @@ namespace Api {
       base.ApplicationStartup(container, pipelines);
       var jwtService = container.GetInstance<IJWTService>();
 
+      // TODO: Move out to extension method
       var configuration = new StatelessAuthenticationConfiguration(ctx => {
         try {
           var bearerDeclaration = "Bearer ";
@@ -117,6 +120,10 @@ namespace Api {
           scanner.AddAllTypesOf(typeof(AbstractValidator<>));
         });
 
+        // register the special case rules
+        cfg.For<IRule<CreateOption>>().Use<CreateOptionOnOwnQuestionnaireRule>();
+        cfg.For<IRule<UpdateOption>>().Use<UpdateOptionOnOwnQuestionnaireRule>();
+
         // register the db context options
         cfg.For<DbContextOptions>().Use(builder.Options);
         
@@ -181,6 +188,12 @@ namespace Api {
         cfg.For<IRead<Question>>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
         cfg.For<IDelete<Question>>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
         cfg.For<ISave<Question>>().Use<QuestionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
+
+        // options
+        cfg.For<IRead<Option>>().Use<OptionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
+        cfg.For<IDelete<Option>>().Use<OptionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
+        cfg.For<ISave<Option>>().Use<OptionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
+
 
         // users
         cfg.For<IRead<User>>().Use<UserRepository>().DecorateWith(u => loggerProxyFactory.Create(timerProxyFactory.Create(u)));

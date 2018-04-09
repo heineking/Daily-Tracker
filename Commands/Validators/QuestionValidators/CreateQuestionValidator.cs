@@ -12,14 +12,14 @@ namespace Commands.Validators {
     public CreateQuestionValidator(SingleInstanceFactory singleFactory) {
 
       RuleFor(create => create.QuestionId)
-        .MustBe((questionId) => (int)questionId == default(int), "Question Id must be unset");
+        .MustBeDefault("Question Id must be unset");
 
       RuleFor(create => create.QuestionnaireId)
         .Required("Questionnaire Id is required");
 
       RuleFor(create => create.SavedById)
         .Required("Saved By Id is required")
-        .MustBe((CanOnlySaveQuestionsOnOwnQuestionnaire)singleFactory(typeof(CanOnlySaveQuestionsOnOwnQuestionnaire)));
+        .MustBe(singleFactory(typeof(CanOnlySaveQuestionsOnOwnQuestionnaire)));
 
       RuleFor(create => create.Text)
         .NotNull("Text cannot be null")

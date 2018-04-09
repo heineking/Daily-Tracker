@@ -30,7 +30,7 @@ namespace Commands.Validators._Rules
       var ownsQuestionnaire = questionnaire.CreatedById == userId;
 
       if (!ownsQuestionnaire)
-        Message = $"User[{userId}] cannot delete questionnaire";
+        Message = $"User[{userId}] does not own questionnaire";
 
       return ownsQuestionnaire;
     }

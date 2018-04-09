@@ -15,7 +15,7 @@ namespace Commands.Validators {
         .NotNull("Username cannot be null")
         .NotEmpty("Username cannot be empty")
         .MaxLength(50, "Username cannot be longer than 50 characters")
-        .MustBe((UniqueUsernameRule)singleFactory(typeof(UniqueUsernameRule)));
+        .MustBe(singleFactory(typeof(UniqueUsernameRule)));
 
       RuleFor(createUser => createUser.FirstName)
         .NotNull("First Name cannot be null")

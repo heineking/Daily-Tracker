@@ -8,7 +8,7 @@ namespace Commands.ValidationHandlers {
     Func<T, bool> IsValid { get; set; }
   }
   public class Rule<T> : IRule<T> {
-    public virtual string Message { get; set; }
-    public virtual Func<T, bool> IsValid { get; set; }
+    public string Message { get; set; }
+    public Func<T, bool> IsValid { get; set; }
   }
 }
