@@ -18,6 +18,8 @@ namespace Queries.Mapper {
       CreateMap<Option, OptionModel>()
         .ForMember(_ => _.Id, opt => opt.MapFrom(_ => _.OptionId));
 
+      CreateMap<Answer, AnswerModel>()
+         .ForMember(_ => _.Id, opt => opt.MapFrom(_ => _.AnswerId));
     }
   }
 }

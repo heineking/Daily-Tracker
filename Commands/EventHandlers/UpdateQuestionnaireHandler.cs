@@ -3,6 +3,7 @@ using DataAccessLayer.Contracts.Entities;
 using Mediator.Contracts;
 using Commands.Events;
 using System;
+using Commands.Mapping;
 
 namespace Commands.EventHandlers {
   public class UpdateQuestionnaireHandler : IEventHandler<UpdateQuestionnaire> {
@@ -17,12 +18,10 @@ namespace Commands.EventHandlers {
     }
 
     public void Handle(UpdateQuestionnaire @event) {
-      var questionnaire = _questionnaireReader.GetById(@event.QuestionnaireId);
+      var entity = _questionnaireReader.GetById(@event.QuestionnaireId);
+      @event.ApplyPropertyUpdates(entity);
 
-      questionnaire.Name = @event.Name;
-      questionnaire.Description = @event.Description;
-      questionnaire.Public = @event.Public;
-      _questionnaireSaver.Save(questionnaire);
+      _questionnaireSaver.Save(entity);
 
       _hub.Publish(new Commit());
     }

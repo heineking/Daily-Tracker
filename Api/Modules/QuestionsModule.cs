@@ -33,10 +33,9 @@ namespace Api.Modules {
       Put("/{id:int}", _ => {
         this.RequiresAuthentication();
 
-        var updateQuestion = this.Bind<UpdateQuestion>();
+        var updateQuestion = BindUpdateModel<IUpdateQuestion, UpdateQuestion>();
 
         updateQuestion.SavedById = User.UserId;
-
         updateQuestion.QuestionId = _.id;
 
         return handler.Put(updateQuestion);

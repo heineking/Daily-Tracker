@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Mediator.Contracts;
 
 namespace Commands.Events {
-  public class CreateAnswer {
+  public class CreateAnswer : IEvent {
     public int AnswerId { get; set; }
     public int OptionId { get; set; }
-    public int QuestionId { get; set; }
     public int UserId { get; set; }
   }
 }

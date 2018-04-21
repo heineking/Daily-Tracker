@@ -43,7 +43,7 @@ namespace Api.Modules {
         this.RequiresAuthentication();
         
         var deleteQuestionnaire = new DeleteQuestionnaire {
-          DeletedByUserId = User.UserId,
+          DeletedById = User.UserId,
           QuestionnaireId = _.id
         };
 

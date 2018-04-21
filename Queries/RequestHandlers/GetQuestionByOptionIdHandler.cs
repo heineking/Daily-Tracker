@@ -12,20 +12,20 @@ using System.Text;
 
 namespace Queries.RequestHandlers
 {
-  [Cache(30, CacheType.Absolute)]
-  public class GetAllQuestionsHandler : IRequestHandler<GetAllQuestions, List<QuestionModel>> {
-    private readonly IRead<Question> _questionReader;
-    private readonly IMapper _mapper;
-    public GetAllQuestionsHandler(IRead<Question> questionReader, IMapper mapper) {
+  [Cache(60*60, CacheType.Absolute)]
+  public class GetQuestionByOptionIdHandler : IRequestHandler<GetQuestionByOptionId, QuestionModel> {
+    private IRead<Question> _questionReader;
+    private IMapper _mapper;
+
+    public GetQuestionByOptionIdHandler(IRead<Question> questionReader, IMapper mapper) {
       _questionReader = questionReader;
-      _mapper = mapper;
     }
 
-    public List<QuestionModel> Handle(GetAllQuestions request) {
+    public QuestionModel Handle(GetQuestionByOptionId request) {
       return _questionReader
-        .GetAll()
+        .Where(q => q.Options.Any(o => o.OptionId == request.OptionId))
         .Select(_mapper.Map<QuestionModel>)
-        .ToList();
+        .Single();
     }
   }
 }

@@ -1,4 +1,5 @@
 ﻿using Commands.Events;
+using Commands.Mapping;
 using DataAccess.Contracts.Repositories;
 using DataAccessLayer.Contracts.Entities;
 using Mediator.Contracts;
@@ -19,10 +20,10 @@ namespace Commands.EventHandlers {
     }
 
     public void Handle(UpdateQuestion @event) {
-      var question = _questionReader.GetById(@event.QuestionId);
-      question.QuestionText = @event.Text;
-      question.QuestionnaireId = @event.QuestionnaireId;
-      _questionSaver.Save(question);
+      var entity = _questionReader.GetById(@event.QuestionId);
+      @event.ApplyPropertyUpdates(entity);
+
+      _questionSaver.Save(entity);
       _hub.Publish(new Commit());
     }
 

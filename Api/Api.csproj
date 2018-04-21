@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Headers\**" />
+    <Content Remove="Headers\**" />
+    <EmbeddedResource Remove="Headers\**" />
+    <None Remove="Headers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Auth\IDailyTrackerPrincipal.cs" />
     <Compile Remove="Auth\IUserIdentity.cs" />
     <Compile Remove="Auth\UserIdentity.cs" />
@@ -13,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="logs\" />
-    <Folder Include="Headers\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

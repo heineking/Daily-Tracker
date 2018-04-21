@@ -20,23 +20,43 @@ namespace Commands.Validators.OptionValidators {
     }
 
     private bool Validate(T option) {
+      var optionId = GetOptionId(option);
+      var userId = GetUserId(option);
       var questionnaire = _questionnaireReader
         .Where(q =>
-          q.CreatedById == option.SavedById &&
-          q.Questions.FirstOrDefault(question => question.Options.FirstOrDefault(o => o.OptionId == option.OptionId) != null) != null
+          q.CreatedById == userId &&
+          q.Questions.FirstOrDefault(question => question.Options.FirstOrDefault(o => o.OptionId == optionId) != null) != null
         ).FirstOrDefault();
-      Message = $"User[{option.SavedById}] does not own Questionnaire";
+      Message = $"User[{userId}] does not own Questionnaire";
       return questionnaire != null;
     }
+    public abstract int GetUserId(T model);
+    public abstract int GetOptionId(T model);
   }
 
   public class CreateOptionOnOwnQuestionnaireRule : OptionOnOwnQuestionnaireRule<CreateOption> {
     public CreateOptionOnOwnQuestionnaireRule(IRead<Questionnaire> questionnaireReader) : base(questionnaireReader) {
     }
+
+    public override int GetOptionId(CreateOption model) {
+      return model.OptionId;
+    }
+
+    public override int GetUserId(CreateOption model) {
+      return model.SavedById;
+    }
   }
 
   public class UpdateOptionOnOwnQuestionnaireRule : OptionOnOwnQuestionnaireRule<UpdateOption> {
     public UpdateOptionOnOwnQuestionnaireRule(IRead<Questionnaire> questionnaireReader) : base(questionnaireReader) {
+    }
+
+    public override int GetOptionId(UpdateOption model) {
+      return model.OptionId;
+    }
+
+    public override int GetUserId(UpdateOption model) {
+      return model.SavedById;
     }
   }
 }

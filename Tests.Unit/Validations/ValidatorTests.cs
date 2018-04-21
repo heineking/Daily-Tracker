@@ -11,7 +11,6 @@ using System.Text;
 namespace Tests.Unit.Validations {
   [TestClass]
   public class ValidatorTests {
-    [TestMethod]
     public void FooBar() {
       var container = new Container(cfg => {
         cfg.For<UniqueUsernameRule>().Use<UniqueUsernameRule>();

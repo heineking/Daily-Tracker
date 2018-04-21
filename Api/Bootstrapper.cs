@@ -194,11 +194,15 @@ namespace Api {
         cfg.For<IDelete<Option>>().Use<OptionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
         cfg.For<ISave<Option>>().Use<OptionRepository>().DecorateWith(q => loggerProxyFactory.Create(timerProxyFactory.Create(q)));
 
-
         // users
         cfg.For<IRead<User>>().Use<UserRepository>().DecorateWith(u => loggerProxyFactory.Create(timerProxyFactory.Create(u)));
         cfg.For<IDelete<User>>().Use<UserRepository>().DecorateWith(u => loggerProxyFactory.Create(timerProxyFactory.Create(u)));
         cfg.For<ISave<User>>().Use<UserRepository>().DecorateWith(u => loggerProxyFactory.Create(timerProxyFactory.Create(u)));
+
+        // answers
+        cfg.For<IRead<Answer>>().Use<AnswerRepository>().DecorateWith(a => loggerProxyFactory.Create(timerProxyFactory.Create(a)));
+        cfg.For<IDelete<Answer>>().Use<AnswerRepository>().DecorateWith(a => loggerProxyFactory.Create(timerProxyFactory.Create(a)));
+        cfg.For<ISave<Answer>>().Use<AnswerRepository>().DecorateWith(a => loggerProxyFactory.Create(timerProxyFactory.Create(a)));
 
         // user directory
         cfg.For<IRead<UserDirectory>>().Use<UserDirectoryRepository>().DecorateWith(u => loggerProxyFactory.Create(timerProxyFactory.Create(u)));

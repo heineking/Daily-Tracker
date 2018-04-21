@@ -14,11 +14,7 @@ namespace Commands.Validators.OptionValidators {
       RuleFor(update => update.SavedById)
         .Required("Saved By Id is required")
         .MustBe(singleInstanceFactory(typeof(UpdateOptionOnOwnQuestionnaireRule)));
-
-      RuleFor(update => update.Text)
-        .NotEmpty("Text cannot be empty")
-        .NotNull("Text cannot be null")
-        .MaxLength(100, "Text must be less than 100 characters");
+      
     }
   }
 }

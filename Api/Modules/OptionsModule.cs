@@ -1,13 +1,18 @@
 ﻿using Api.Handlers;
 using Commands.Events;
+using Commands.Proxies;
 using Nancy;
+using Nancy.Extensions;
+using Nancy.IO;
 using Nancy.ModelBinding;
 using Nancy.Security;
+using Newtonsoft.Json;
 using Queries.Models;
 using Queries.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Api.Modules {
@@ -28,12 +33,10 @@ namespace Api.Modules {
 
       Put("/{id:int}", _ => {
         this.RequiresAuthentication();
-
-        var updateOption = this.Bind<UpdateOption>();
-        updateOption.OptionId = _.id;
-        updateOption.SavedById = User.UserId;
-
-        return handler.Put(updateOption);
+        var model = BindUpdateModel<ISaveOption, UpdateOption>();
+        model.OptionId = _.id;
+        model.SavedById = User.UserId;
+        return handler.Put(model);
       });
     }
   }

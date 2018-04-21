@@ -13,8 +13,6 @@ namespace Commands.Validators {
         .Required("Questionnaire Id is required");
 
       RuleFor(createQuestionnaire => createQuestionnaire.Name)
-        .NotNull("Name cannot be null")
-        .NotEmpty("Name cannot be empty")
         .MaxLength(100, "Name cannot be longer than 100 characters");
 
       RuleFor(createQuestionnaire => createQuestionnaire.Description)

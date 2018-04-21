@@ -10,7 +10,7 @@ namespace Commands.Validators.QuestionnaireValidators
     }
 
     public override int GetUserId(DeleteQuestionnaire entity) {
-      return entity.DeletedByUserId;
+      return entity.DeletedById;
     }
 
     public override int GetQuestionnaireId(DeleteQuestionnaire entity) {

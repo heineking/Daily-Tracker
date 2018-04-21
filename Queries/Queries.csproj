@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <Compile Remove="Models\QuestionOptions.cs" />
+    <Compile Remove="RequestHandlers\GetQuestionByOptionIdHandler.cs" />
+    <Compile Remove="Requests\GetQuestionByOptionId.cs" />
   </ItemGroup>
 
   <ItemGroup>

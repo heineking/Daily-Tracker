@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Tests.Integrations {
-  [TestClass]
+  
   public class QuestionnaireRepositoryTests : IDisposable {
     private readonly DailyTrackerContext _context;
     private readonly QuestionnaireRepository _repo;
